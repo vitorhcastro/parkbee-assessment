@@ -32,7 +32,7 @@ public class UsersController : ControllerBase
     [HttpGet("{id:guid}/parking-sessions")]
     public async Task<List<ParkingSession>> GetUserParkingSessionsById(Guid id, CancellationToken cancellationToken, [FromQuery] ParkingSessionStatus? status = null)
     {
-        var query = new GetUserParkingSessionsByIdQuery(id, cancellationToken, status);
+        var query = new GetUserParkingSessionsByIdQuery(id, status);
         var result = await this.mediator.Send(query, cancellationToken);
         return result;
     }

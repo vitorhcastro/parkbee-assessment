@@ -24,14 +24,14 @@ public class GetGarageDoorHealthQueryHandler : IRequestHandler<GetGarageDoorHeal
         CancellationToken cancellationToken)
     {
         var garageExists =
-            await this.dbContext.Garages.AnyAsync(u => u.Id == request.GarageId, request.CancellationToken);
+            await this.dbContext.Garages.AnyAsync(u => u.Id == request.GarageId, cancellationToken);
         if (!garageExists)
         {
             throw new NotFoundException(nameof(Garage), request.GarageId);
         }
 
         var door =
-            await this.dbContext.Doors.FirstOrDefaultAsync(u => u.Id == request.DoorId, request.CancellationToken);
+            await this.dbContext.Doors.FirstOrDefaultAsync(u => u.Id == request.DoorId, cancellationToken);
         if (door == null)
         {
             throw new NotFoundException(nameof(Door), request.DoorId);

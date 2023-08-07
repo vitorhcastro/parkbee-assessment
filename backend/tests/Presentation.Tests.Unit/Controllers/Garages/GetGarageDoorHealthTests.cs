@@ -27,7 +27,7 @@ public class GetGarageDoorHealthTests
     {
         // Arrange
         mediatorMock
-            .Setup(m => m.Send(new GetGarageDoorHealthQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
+            .Setup(m => m.Send(new GetGarageDoorHealthQuery(TestGarage.Id, TestDoor.Id),
                 default))
             .ReturnsAsync(new GetGarageDoorHealthResponse());
 
@@ -36,7 +36,7 @@ public class GetGarageDoorHealthTests
 
         // Assert
         mediatorMock.Verify(
-            m => m.Send(new GetGarageDoorHealthQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
+            m => m.Send(new GetGarageDoorHealthQuery(TestGarage.Id, TestDoor.Id),
                 default),
             Times.Once);
     }
@@ -50,7 +50,7 @@ public class GetGarageDoorHealthTests
             Health = DoorHealth.Ok,
         };
         mediatorMock
-            .Setup(m => m.Send(new GetGarageDoorHealthQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
+            .Setup(m => m.Send(new GetGarageDoorHealthQuery(TestGarage.Id, TestDoor.Id),
                 default))
             .ReturnsAsync(expected);
 

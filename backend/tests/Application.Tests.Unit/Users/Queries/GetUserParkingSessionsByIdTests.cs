@@ -39,7 +39,7 @@ public class GetUserParkingSessionsByIdTests
 
         // Act
         Func<Task> act = async () =>
-            await queryHandler.Handle(new GetUserParkingSessionsByIdQuery(TestUser.Id, CancellationToken.None),
+            await queryHandler.Handle(new GetUserParkingSessionsByIdQuery(TestUser.Id),
                 CancellationToken.None);
 
         // Assert
@@ -58,7 +58,7 @@ public class GetUserParkingSessionsByIdTests
             .ReturnsDbSet(expected);
 
         // Act
-        var act = await queryHandler.Handle(new GetUserParkingSessionsByIdQuery(TestUser.Id, CancellationToken.None),
+        var act = await queryHandler.Handle(new GetUserParkingSessionsByIdQuery(TestUser.Id),
             CancellationToken.None);
 
         // Assert
@@ -84,7 +84,7 @@ public class GetUserParkingSessionsByIdTests
 
         // Act
         var act = await queryHandler.Handle(
-            new GetUserParkingSessionsByIdQuery(TestUser.Id, CancellationToken.None, ParkingSessionStatus.Running),
+            new GetUserParkingSessionsByIdQuery(TestUser.Id, ParkingSessionStatus.Running),
             CancellationToken.None);
 
         // Assert

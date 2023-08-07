@@ -45,7 +45,7 @@ public class GetGarageDoorStatusQueryTests
         // Act
         Func<Task> act = async () =>
             await queryHandler.Handle(
-                new GetGarageDoorStatusQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
+                new GetGarageDoorStatusQuery(TestGarage.Id, TestDoor.Id),
                 CancellationToken.None);
 
         // Assert
@@ -65,7 +65,7 @@ public class GetGarageDoorStatusQueryTests
         // Act
         Func<Task> act = async () =>
             await queryHandler.Handle(
-                new GetGarageDoorStatusQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
+                new GetGarageDoorStatusQuery(TestGarage.Id, TestDoor.Id),
                 CancellationToken.None);
 
         // Assert
@@ -84,7 +84,7 @@ public class GetGarageDoorStatusQueryTests
 
         // Act
         await queryHandler.Handle(
-            new GetGarageDoorStatusQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
+            new GetGarageDoorStatusQuery(TestGarage.Id, TestDoor.Id),
             CancellationToken.None);
 
         // Assert
@@ -105,7 +105,7 @@ public class GetGarageDoorStatusQueryTests
 
         // Act
         var actual = await queryHandler.Handle(
-            new GetGarageDoorStatusQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
+            new GetGarageDoorStatusQuery(TestGarage.Id, TestDoor.Id),
             CancellationToken.None);
 
         // Assert

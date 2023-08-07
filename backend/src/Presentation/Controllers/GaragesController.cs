@@ -39,14 +39,14 @@ public class GaragesController : ControllerBase
     [HttpGet("{garageId:guid}/doors/{doorId:guid}/health")]
     public Task<GetGarageDoorHealthResponse> GetGarageDoorHealth(Guid garageId, Guid doorId, CancellationToken cancellationToken)
     {
-        var query = new GetGarageDoorHealthQuery(garageId, doorId, cancellationToken);
+        var query = new GetGarageDoorHealthQuery(garageId, doorId);
         return this.mediator.Send(query, cancellationToken);
     }
 
     [HttpGet("{garageId:guid}/doors/{doorId:guid}/status")]
     public Task<GetGarageDoorStatusResponse> GetGarageDoorStatus(Guid garageId, Guid doorId, CancellationToken cancellationToken)
     {
-        var query = new GetGarageDoorStatusQuery(garageId, doorId, cancellationToken);
+        var query = new GetGarageDoorStatusQuery(garageId, doorId);
         return this.mediator.Send(query, cancellationToken);
     }
 }

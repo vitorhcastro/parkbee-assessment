@@ -27,7 +27,7 @@ public class GetUserParkingSessionsByIdTests
     {
         // Arrange
         mediatorMock
-            .Setup(m => m.Send(new GetUserParkingSessionsByIdQuery(TestUser.Id, CancellationToken.None, null), default))
+            .Setup(m => m.Send(new GetUserParkingSessionsByIdQuery(TestUser.Id, null), default))
             .ReturnsAsync(new List<ParkingSession>());
 
         // Act
@@ -35,7 +35,7 @@ public class GetUserParkingSessionsByIdTests
 
         // Assert
         mediatorMock.Verify(
-            m => m.Send(new GetUserParkingSessionsByIdQuery(TestUser.Id, CancellationToken.None, null), default),
+            m => m.Send(new GetUserParkingSessionsByIdQuery(TestUser.Id, null), default),
             Times.Once);
     }
 
@@ -45,7 +45,7 @@ public class GetUserParkingSessionsByIdTests
         // Arrange
         mediatorMock
             .Setup(m => m.Send(
-                new GetUserParkingSessionsByIdQuery(TestUser.Id, CancellationToken.None, ParkingSessionStatus.Running),
+                new GetUserParkingSessionsByIdQuery(TestUser.Id, ParkingSessionStatus.Running),
                 default))
             .ReturnsAsync(new List<ParkingSession>());
 
@@ -56,7 +56,7 @@ public class GetUserParkingSessionsByIdTests
         // Assert
         mediatorMock.Verify(
             m => m.Send(
-                new GetUserParkingSessionsByIdQuery(TestUser.Id, CancellationToken.None, ParkingSessionStatus.Running),
+                new GetUserParkingSessionsByIdQuery(TestUser.Id, ParkingSessionStatus.Running),
                 default), Times.Once);
     }
 
@@ -66,7 +66,7 @@ public class GetUserParkingSessionsByIdTests
         // Arrange
         var expected = new List<ParkingSession> { TestParkingSession };
         mediatorMock
-            .Setup(m => m.Send(new GetUserParkingSessionsByIdQuery(TestUser.Id, CancellationToken.None, null), default))
+            .Setup(m => m.Send(new GetUserParkingSessionsByIdQuery(TestUser.Id, null), default))
             .ReturnsAsync(expected);
 
         // Act

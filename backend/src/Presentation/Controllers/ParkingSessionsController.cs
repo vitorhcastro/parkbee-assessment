@@ -1,3 +1,5 @@
+using Application.ParkingSessions.Queries.GetParkingSessionById;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,9 +21,10 @@ public class ParkingSessionsController
     }
 
     [HttpGet("id:guid")]
-    public void CreateParkingSession(Guid id)
+    public Task<ParkingSession> GetParkingSessionById(Guid id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var query = new GetParkingSessionByIdQuery(id);
+        return this._mediator.Send(query, cancellationToken);
     }
 
     [HttpPut("{id:guid}/status")]
