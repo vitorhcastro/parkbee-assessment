@@ -12,8 +12,8 @@ namespace Presentation.Tests.Unit.Controllers.Users;
 
 public class GetUserParkingSessionsByIdTests
 {
-    private readonly User testUser = AUser().Build();
-    private readonly ParkingSession testParkingSession = AParkingSession().Build();
+    private static readonly User TestUser = AUser().Build();
+    private static readonly ParkingSession TestParkingSession = AParkingSession().WithUser(TestUser).Build();
     private readonly Mock<IMediator> mediatorMock;
     private readonly UsersController usersController;
 
@@ -28,15 +28,15 @@ public class GetUserParkingSessionsByIdTests
     {
         // Arrange
         mediatorMock
-            .Setup(m => m.Send(new GetUserParkingSessionsByIdQuery(testUser.Id, CancellationToken.None, null), default))
+            .Setup(m => m.Send(new GetUserParkingSessionsByIdQuery(TestUser.Id, CancellationToken.None, null), default))
             .ReturnsAsync(new List<ParkingSession>());
 
         // Act
-        _ = await usersController.GetUserParkingSessionsById(testUser.Id, CancellationToken.None);
+        _ = await usersController.GetUserParkingSessionsById(TestUser.Id, CancellationToken.None);
 
         // Assert
         mediatorMock.Verify(
-            m => m.Send(new GetUserParkingSessionsByIdQuery(testUser.Id, CancellationToken.None, null), default),
+            m => m.Send(new GetUserParkingSessionsByIdQuery(TestUser.Id, CancellationToken.None, null), default),
             Times.Once);
     }
 
@@ -46,18 +46,18 @@ public class GetUserParkingSessionsByIdTests
         // Arrange
         mediatorMock
             .Setup(m => m.Send(
-                new GetUserParkingSessionsByIdQuery(testUser.Id, CancellationToken.None, ParkingSessionStatus.Running),
+                new GetUserParkingSessionsByIdQuery(TestUser.Id, CancellationToken.None, ParkingSessionStatus.Running),
                 default))
             .ReturnsAsync(new List<ParkingSession>());
 
         // Act
-        _ = await usersController.GetUserParkingSessionsById(testUser.Id, CancellationToken.None,
+        _ = await usersController.GetUserParkingSessionsById(TestUser.Id, CancellationToken.None,
             ParkingSessionStatus.Running);
 
         // Assert
         mediatorMock.Verify(
             m => m.Send(
-                new GetUserParkingSessionsByIdQuery(testUser.Id, CancellationToken.None, ParkingSessionStatus.Running),
+                new GetUserParkingSessionsByIdQuery(TestUser.Id, CancellationToken.None, ParkingSessionStatus.Running),
                 default), Times.Once);
     }
 
@@ -65,13 +65,13 @@ public class GetUserParkingSessionsByIdTests
     public async Task should_return_list_from_query()
     {
         // Arrange
-        var expected = new List<ParkingSession> { testParkingSession };
+        var expected = new List<ParkingSession> { TestParkingSession };
         mediatorMock
-            .Setup(m => m.Send(new GetUserParkingSessionsByIdQuery(testUser.Id, CancellationToken.None, null), default))
+            .Setup(m => m.Send(new GetUserParkingSessionsByIdQuery(TestUser.Id, CancellationToken.None, null), default))
             .ReturnsAsync(expected);
 
         // Act
-        var actual = await usersController.GetUserParkingSessionsById(testUser.Id, CancellationToken.None);
+        var actual = await usersController.GetUserParkingSessionsById(TestUser.Id, CancellationToken.None);
 
         // Assert
         actual.Should().BeEquivalentTo(expected);

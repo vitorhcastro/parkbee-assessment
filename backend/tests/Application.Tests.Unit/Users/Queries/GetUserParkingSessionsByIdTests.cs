@@ -44,7 +44,9 @@ public class GetUserParkingSessionsByIdTests
                 CancellationToken.None);
 
         // Assert
-        await act.Should().ThrowAsync<NotFoundException>();
+        await act.Should()
+            .ThrowAsync<NotFoundException>()
+            .WithMessage($"Entity \"{nameof(User)}\" ({TestUser.Id}) was not found.");
     }
 
     [Fact]

@@ -117,26 +117,3 @@ public class ParkingSessionSteps
         this.scenarioContext.Set(response, "stop-parking-session-response");
     }
 }
-
-public class GetParkingSessionByIdResponse
-{
-    public ParkingSessionStatus Status { get; set; }
-}
-
-public class UpdateParkingSessionStatusRequest
-{
-    public ParkingSessionStatus Status { get; set; }
-    public Guid ExitDoorId { get; set; }
-}
-
-public class CreateParkingSessionResponse
-{
-    public Guid Id { get; set; }
-}
-
-public class CreateParkingSessionRequest
-{
-    public Guid UserId { get; set; }
-    public Guid GarageId { get; set; }
-    public Guid DoorId { get; set; }
-}

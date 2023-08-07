@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using Api.Tests.Integration.Drivers;
 using Api.Tests.Integration.Fixtures;
 using Application.Garages.Queries.GetGarageById;
+using Application.Garages.Queries.GetGarageDoorHealth;
 using Domain.Entities;
 using FluentAssertions;
 using TechTalk.SpecFlow.Assist;
@@ -88,8 +89,8 @@ public class GarageSteps : IClassFixture<IntegrationTestFixture>
         var response = await this.driver.GetHttpClient().GetAsync($"/api/garages/{garage.Id}/doors/{door.Id}/health");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var health = await response.Content.ReadFromJsonAsync<DoorHealthDto>();
-        health.HealthStatus.Should().Be(DoorHealthStatus.Ok);
+        var health = await response.Content.ReadFromJsonAsync<GetGarageDoorHealthResponse>();
+        health.Health.Should().Be(DoorHealthStatus.Ok);
         this.scenarioContext.Set(garage, "current-door");
     }
 
@@ -127,34 +128,10 @@ public class GarageSteps : IClassFixture<IntegrationTestFixture>
         var response = await this.driver.GetHttpClient().GetAsync($"/api/garages/{garage.Id}/doors/{door.Id}/health");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var health = await response.Content.ReadFromJsonAsync<DoorHealthDto>();
-        health.HealthStatus.Should().Be(DoorHealthStatus.Unreachable);
+        var health = await response.Content.ReadFromJsonAsync<GetGarageDoorHealthResponse>();
+        health.Health.Should().Be(DoorHealthStatus.Unreachable);
         this.scenarioContext.Set(garage, "current-door");
     }
-}
-
-public class DoorStatusDto
-{
-    public DoorStatus Status { get; set; }
-}
-
-public enum DoorStatus
-{
-    Unknown = 0,
-    Open = 1,
-    Closed = 2,
-}
-
-public enum DoorHealthStatus
-{
-    Unknown = 0,
-    Ok = 1,
-    Unreachable = 2,
-}
-
-public class DoorHealthDto
-{
-    public DoorHealthStatus HealthStatus { get; set; }
 }
 
 public record GarageTable(string Garage);
