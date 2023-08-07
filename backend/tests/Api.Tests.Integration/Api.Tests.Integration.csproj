@@ -24,10 +24,6 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<Folder Include="Hooks\"/>
-	</ItemGroup>
-	
-	<ItemGroup>
 		<ProjectReference Include="..\..\src\Presentation\Presentation.csproj"/>
 	</ItemGroup>
 

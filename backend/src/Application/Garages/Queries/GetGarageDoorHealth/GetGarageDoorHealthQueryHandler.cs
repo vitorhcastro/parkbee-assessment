@@ -37,7 +37,7 @@ public class GetGarageDoorHealthQueryHandler : IRequestHandler<GetGarageDoorHeal
             throw new NotFoundException(nameof(Door), request.DoorId);
         }
 
-        var healthStatus = await this.doorGateway.CheckHealth(door);
+        var healthStatus = this.doorGateway.CheckHealth(door);
 
         return new GetGarageDoorHealthResponse
         {

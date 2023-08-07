@@ -1,3 +1,4 @@
+using System.Net.NetworkInformation;
 using Application.Common.Interfaces;
 using Domain.Entities;
 
@@ -5,18 +6,20 @@ namespace Infrastructure.Gateways;
 
 public class DoorGateway : IDoorGateway
 {
-    public Task<DoorHealth> CheckHealth(Door door)
+    public DoorHealth CheckHealth(Door door)
     {
-        throw new NotImplementedException();
+        var ping = new Ping();
+        var result = ping.Send(door.IpAddress, 1000);
+        return result.Status == IPStatus.Success ? DoorHealth.Ok : DoorHealth.Unreachable;
     }
 
     public Task<DoorStatus> CheckStatus(Door door)
     {
-        throw new NotImplementedException();
+        return Task.FromResult(DoorStatus.Open);
     }
 
     public Task OpenDoor(Door door)
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 }

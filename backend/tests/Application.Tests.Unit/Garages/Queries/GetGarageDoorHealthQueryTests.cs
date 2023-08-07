@@ -80,7 +80,7 @@ public class GetGarageDoorHealthQueryTests
         // Arrange
         this.gatewayMock
             .Setup(x => x.CheckHealth(TestDoor))
-            .ReturnsAsync(DoorHealth.Ok);
+            .Returns(DoorHealth.Ok);
 
         // Act
         await queryHandler.Handle(
@@ -97,7 +97,7 @@ public class GetGarageDoorHealthQueryTests
         // Arrange
         this.gatewayMock
             .Setup(x => x.CheckHealth(TestDoor))
-            .ReturnsAsync(DoorHealth.Ok);
+            .Returns(DoorHealth.Ok);
         var expected = new GetGarageDoorHealthResponse
         {
             Health = DoorHealth.Ok,

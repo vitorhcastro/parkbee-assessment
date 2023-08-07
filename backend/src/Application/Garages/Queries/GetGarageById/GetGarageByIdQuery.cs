@@ -1,4 +1,3 @@
-using Application.Common.Mappings;
 using Domain.Entities;
 using MediatR;
 

@@ -45,7 +45,7 @@ public class CreateParkingSessionTests
         gatewayMock = new Mock<IDoorGateway>();
         gatewayMock
             .Setup(x => x.CheckHealth(TestParkingSession.EntryDoor))
-            .ReturnsAsync(DoorHealth.Ok);
+            .Returns(DoorHealth.Ok);
 
         commandHandler = new CreateParkingSessionCommandHandler(dbContextMock.Object, gatewayMock.Object);
     }
@@ -213,7 +213,7 @@ public class CreateParkingSessionTests
         // Arrange
         this.gatewayMock
             .Setup(m => m.CheckHealth(TestParkingSession.EntryDoor))
-            .ReturnsAsync(doorHealth);
+            .Returns(doorHealth);
 
         // Act
         Func<Task> act = async () =>

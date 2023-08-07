@@ -10,4 +10,6 @@ public static class ApplicationConstants
 
         public const string PartnerIdCustomClaim = "partnerId";
     }
+
+    public const string ParkbeeDotComIpAddress = "13.225.244.6";
 }

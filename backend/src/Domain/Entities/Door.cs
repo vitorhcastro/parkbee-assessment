@@ -10,4 +10,5 @@ public class Door
 
     public Guid GarageId { get; set; }
     public Garage? Garage { get; set; }
+    public string IpAddress { get; set; }
 }

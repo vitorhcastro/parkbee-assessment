@@ -1,7 +1,6 @@
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Garages.Queries.GetGarageById;
-using AutoMapper;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;

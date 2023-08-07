@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Infrastructure;
 using static TestHelpers.GarageBuilder;
 
 namespace TestHelpers;
@@ -8,6 +9,7 @@ public class DoorBuilder
     private Guid id = Guid.NewGuid();
     private Garage garage = AGarage().Build();
     private DoorType doorType = DoorType.Entry;
+    private string ipAddress = ApplicationConstants.ParkbeeDotComIpAddress;
 
     public static DoorBuilder ADoor()
     {
@@ -32,6 +34,12 @@ public class DoorBuilder
         return this;
     }
 
+    public DoorBuilder WithIpAddress(string ipAddress)
+    {
+        this.ipAddress = ipAddress;
+        return this;
+    }
+
     public Door Build()
     {
         return new Door()
@@ -40,6 +48,7 @@ public class DoorBuilder
             GarageId = this.garage.Id,
             Garage = this.garage,
             DoorType = this.doorType,
+            IpAddress = this.ipAddress,
         };
     }
 }

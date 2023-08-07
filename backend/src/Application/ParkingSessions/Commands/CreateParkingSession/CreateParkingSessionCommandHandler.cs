@@ -61,7 +61,7 @@ public class
             failures.Add(new(nameof(ParkingSession), "Garage is full"));
         }
 
-        var doorHealth = await this.doorGateway.CheckHealth(door);
+        var doorHealth = this.doorGateway.CheckHealth(door);
         if (doorHealth != DoorHealth.Ok)
         {
             failures.Add(new(nameof(ParkingSession), "Door is not working"));
