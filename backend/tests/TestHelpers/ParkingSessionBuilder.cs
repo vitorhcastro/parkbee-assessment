@@ -1,4 +1,3 @@
-using Domain.Common;
 using Domain.Entities;
 using static TestHelpers.UserBuilder;
 

@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
 using Api.Tests.Integration.Drivers;
-using Domain.Common;
 using Domain.Entities;
 using FluentAssertions;
 

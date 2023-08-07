@@ -1,7 +1,6 @@
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Users.Queries.GetUserParkingSessionsById;
-using Domain.Common;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;

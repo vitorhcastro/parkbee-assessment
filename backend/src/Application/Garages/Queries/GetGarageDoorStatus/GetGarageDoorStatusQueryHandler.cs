@@ -4,15 +4,15 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Garages.Queries.GetGarageDoorHealth;
+namespace Application.Garages.Queries.GetGarageDoorStatus;
 
-public class GetGarageDoorHealthQueryHandler : IRequestHandler<GetGarageDoorHealthQuery,
-    GetGarageDoorHealthResponse>
+public class GetGarageDoorStatusQueryHandler : IRequestHandler<GetGarageDoorStatusQuery,
+    GetGarageDoorStatusResponse>
 {
     private readonly IParkingDbContext dbContext;
     private readonly IDoorStatusGateway doorStatusGateway;
 
-    public GetGarageDoorHealthQueryHandler(
+    public GetGarageDoorStatusQueryHandler(
         IParkingDbContext dbContext,
         IDoorStatusGateway doorStatusGateway)
     {
@@ -20,7 +20,7 @@ public class GetGarageDoorHealthQueryHandler : IRequestHandler<GetGarageDoorHeal
         this.doorStatusGateway = doorStatusGateway;
     }
 
-    public async Task<GetGarageDoorHealthResponse> Handle(GetGarageDoorHealthQuery request,
+    public async Task<GetGarageDoorStatusResponse> Handle(GetGarageDoorStatusQuery request,
         CancellationToken cancellationToken)
     {
         var garageExists =
@@ -37,11 +37,11 @@ public class GetGarageDoorHealthQueryHandler : IRequestHandler<GetGarageDoorHeal
             throw new NotFoundException(nameof(Door), request.DoorId);
         }
 
-        var healthStatus = await this.doorStatusGateway.CheckHealth(door);
+        var status = await this.doorStatusGateway.CheckStatus(door);
 
-        return new GetGarageDoorHealthResponse
+        return new GetGarageDoorStatusResponse
         {
-            Health = healthStatus,
+            Status = status,
         };
     }
 }

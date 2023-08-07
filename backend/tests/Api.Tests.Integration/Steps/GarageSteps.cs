@@ -4,6 +4,7 @@ using Api.Tests.Integration.Drivers;
 using Api.Tests.Integration.Fixtures;
 using Application.Garages.Queries.GetGarageById;
 using Application.Garages.Queries.GetGarageDoorHealth;
+using Application.Garages.Queries.GetGarageDoorStatus;
 using Domain.Entities;
 using FluentAssertions;
 using TechTalk.SpecFlow.Assist;
@@ -90,7 +91,7 @@ public class GarageSteps : IClassFixture<IntegrationTestFixture>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var health = await response.Content.ReadFromJsonAsync<GetGarageDoorHealthResponse>();
-        health.Health.Should().Be(DoorHealthStatus.Ok);
+        health.Health.Should().Be(DoorHealth.Ok);
         this.scenarioContext.Set(garage, "current-door");
     }
 
@@ -103,7 +104,7 @@ public class GarageSteps : IClassFixture<IntegrationTestFixture>
         var response = await this.driver.GetHttpClient().GetAsync($"/api/doors/{currentDoor.Id}/status");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var health = await response.Content.ReadFromJsonAsync<DoorStatusDto>();
+        var health = await response.Content.ReadFromJsonAsync<GetGarageDoorStatusResponse>();
         health.Status.Should().Be(DoorStatus.Open);
     }
 
@@ -129,7 +130,7 @@ public class GarageSteps : IClassFixture<IntegrationTestFixture>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var health = await response.Content.ReadFromJsonAsync<GetGarageDoorHealthResponse>();
-        health.Health.Should().Be(DoorHealthStatus.Unreachable);
+        health.Health.Should().Be(DoorHealth.Unreachable);
         this.scenarioContext.Set(garage, "current-door");
     }
 }

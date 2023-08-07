@@ -1,6 +1,6 @@
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using Application.Garages.Queries.GetGarageDoorHealth;
+using Application.Garages.Queries.GetGarageDoorStatus;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -12,16 +12,16 @@ namespace Application.Tests.Unit.Garages.Queries;
 using static TestHelpers.DoorBuilder;
 using static TestHelpers.GarageBuilder;
 
-public class GetGarageDoorHealthQueryTests
+public class GetGarageDoorStatusQueryTests
 {
     private static readonly Door TestDoor = ADoor().Build();
     private static readonly Garage TestGarage = AGarage().WithDoor(TestDoor).Build();
 
     private readonly Mock<IParkingDbContext> dbContextMock;
     private readonly Mock<IDoorStatusGateway> gatewayMock;
-    private readonly GetGarageDoorHealthQueryHandler queryHandler;
+    private readonly GetGarageDoorStatusQueryHandler queryHandler;
 
-    public GetGarageDoorHealthQueryTests()
+    public GetGarageDoorStatusQueryTests()
     {
         dbContextMock = new Mock<IParkingDbContext>();
         dbContextMock
@@ -31,7 +31,7 @@ public class GetGarageDoorHealthQueryTests
             .Setup<DbSet<Door>>(m => m.Doors)
             .ReturnsDbSet(new List<Door> { TestDoor });
         gatewayMock = new Mock<IDoorStatusGateway>();
-        queryHandler = new GetGarageDoorHealthQueryHandler(dbContextMock.Object, gatewayMock.Object);
+        queryHandler = new GetGarageDoorStatusQueryHandler(dbContextMock.Object, gatewayMock.Object);
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public class GetGarageDoorHealthQueryTests
         // Act
         Func<Task> act = async () =>
             await queryHandler.Handle(
-                new GetGarageDoorHealthQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
+                new GetGarageDoorStatusQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
                 CancellationToken.None);
 
         // Assert
@@ -65,7 +65,7 @@ public class GetGarageDoorHealthQueryTests
         // Act
         Func<Task> act = async () =>
             await queryHandler.Handle(
-                new GetGarageDoorHealthQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
+                new GetGarageDoorStatusQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
                 CancellationToken.None);
 
         // Assert
@@ -79,16 +79,16 @@ public class GetGarageDoorHealthQueryTests
     {
         // Arrange
         this.gatewayMock
-            .Setup(x => x.CheckHealth(TestDoor))
-            .ReturnsAsync(DoorHealth.Ok);
+            .Setup(x => x.CheckStatus(TestDoor))
+            .ReturnsAsync(DoorStatus.Open);
 
         // Act
         await queryHandler.Handle(
-            new GetGarageDoorHealthQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
+            new GetGarageDoorStatusQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
             CancellationToken.None);
 
         // Assert
-        this.gatewayMock.Verify(m => m.CheckHealth(TestDoor), Times.Once);
+        this.gatewayMock.Verify(m => m.CheckStatus(TestDoor), Times.Once);
     }
 
     [Fact]
@@ -96,16 +96,16 @@ public class GetGarageDoorHealthQueryTests
     {
         // Arrange
         this.gatewayMock
-            .Setup(x => x.CheckHealth(TestDoor))
-            .ReturnsAsync(DoorHealth.Ok);
-        var expected = new GetGarageDoorHealthResponse
+            .Setup(x => x.CheckStatus(TestDoor))
+            .ReturnsAsync(DoorStatus.Open);
+        var expected = new GetGarageDoorStatusResponse
         {
-            Health = DoorHealth.Ok,
+            Status = DoorStatus.Open,
         };
 
         // Act
         var actual = await queryHandler.Handle(
-            new GetGarageDoorHealthQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
+            new GetGarageDoorStatusQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
             CancellationToken.None);
 
         // Assert

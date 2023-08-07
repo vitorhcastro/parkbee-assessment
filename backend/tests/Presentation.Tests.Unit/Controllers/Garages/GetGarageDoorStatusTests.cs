@@ -1,4 +1,4 @@
-using Application.Garages.Queries.GetGarageDoorHealth;
+using Application.Garages.Queries.GetGarageDoorStatus;
 using Domain.Entities;
 using FluentAssertions;
 using MediatR;
@@ -9,14 +9,14 @@ using static TestHelpers.GarageBuilder;
 
 namespace Presentation.Tests.Unit.Controllers.Garages;
 
-public class GetGarageDoorHealthTests
+public class GetGarageDoorStatusTests
 {
     private static readonly Door TestDoor = ADoor().Build();
     private static readonly Garage TestGarage = AGarage().WithDoor(TestDoor).Build();
     private readonly Mock<IMediator> mediatorMock;
     private readonly GaragesController garagesController;
 
-    public GetGarageDoorHealthTests()
+    public GetGarageDoorStatusTests()
     {
         mediatorMock = new Mock<IMediator>();
         garagesController = new GaragesController(mediatorMock.Object);
@@ -27,16 +27,16 @@ public class GetGarageDoorHealthTests
     {
         // Arrange
         mediatorMock
-            .Setup(m => m.Send(new GetGarageDoorHealthQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
+            .Setup(m => m.Send(new GetGarageDoorStatusQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
                 default))
-            .ReturnsAsync(new GetGarageDoorHealthResponse());
+            .ReturnsAsync(new GetGarageDoorStatusResponse());
 
         // Act
-        await garagesController.GetGarageDoorHealth(TestGarage.Id, TestDoor.Id, CancellationToken.None);
+        await garagesController.GetGarageDoorStatus(TestGarage.Id, TestDoor.Id, CancellationToken.None);
 
         // Assert
         mediatorMock.Verify(
-            m => m.Send(new GetGarageDoorHealthQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
+            m => m.Send(new GetGarageDoorStatusQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
                 default),
             Times.Once);
     }
@@ -45,17 +45,17 @@ public class GetGarageDoorHealthTests
     public async Task should_return_health_status_from_query()
     {
         // Arrange
-        var expected = new GetGarageDoorHealthResponse
+        var expected = new GetGarageDoorStatusResponse
         {
-            Health = DoorHealth.Ok,
+            Status = DoorStatus.Open,
         };
         mediatorMock
-            .Setup(m => m.Send(new GetGarageDoorHealthQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
+            .Setup(m => m.Send(new GetGarageDoorStatusQuery(TestGarage.Id, TestDoor.Id, CancellationToken.None),
                 default))
             .ReturnsAsync(expected);
 
         // Act
-        var actual = await garagesController.GetGarageDoorHealth(TestGarage.Id, TestDoor.Id, CancellationToken.None);
+        var actual = await garagesController.GetGarageDoorStatus(TestGarage.Id, TestDoor.Id, CancellationToken.None);
 
         // Assert
         actual.Should().BeEquivalentTo(expected);

@@ -1,5 +1,4 @@
 using Application.Users.Queries.GetUserParkingSessionsById;
-using Domain.Common;
 using Domain.Entities;
 using FluentAssertions;
 using MediatR;

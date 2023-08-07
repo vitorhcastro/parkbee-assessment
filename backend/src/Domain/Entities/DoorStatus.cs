@@ -1,4 +1,4 @@
-namespace Api.Tests.Integration.Steps;
+namespace Domain.Entities;
 
 public enum DoorStatus
 {

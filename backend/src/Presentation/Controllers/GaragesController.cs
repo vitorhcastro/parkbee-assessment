@@ -1,6 +1,7 @@
 using Application.Garages.Queries.GetAllGarages;
 using Application.Garages.Queries.GetGarageById;
 using Application.Garages.Queries.GetGarageDoorHealth;
+using Application.Garages.Queries.GetGarageDoorStatus;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -43,8 +44,9 @@ public class GaragesController : ControllerBase
     }
 
     [HttpGet("{garageId:guid}/doors/{doorId:guid}/status")]
-    public Task GetGarageDoorStatus(Guid garageId, Guid doorId, CancellationToken cancellationToken)
+    public Task<GetGarageDoorStatusResponse> GetGarageDoorStatus(Guid garageId, Guid doorId, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var query = new GetGarageDoorStatusQuery(garageId, doorId, cancellationToken);
+        return this.mediator.Send(query, cancellationToken);
     }
 }
