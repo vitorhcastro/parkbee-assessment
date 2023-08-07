@@ -1,7 +1,7 @@
 using Infrastructure.Authorization;
 using Microsoft.OpenApi.Models;
 
-namespace Api.Extensions.Configuration;
+namespace Presentation.Extensions.Configuration;
 
 public static class SwaggerExtensions
 {

@@ -1,6 +1,6 @@
 ﻿using Infrastructure.Persistence;
 
-namespace Api.Extensions.Configuration;
+namespace Presentation.Extensions.Configuration;
 
 public static class HealthChecksExtensions
 {

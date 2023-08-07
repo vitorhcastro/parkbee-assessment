@@ -21,4 +21,10 @@
     </PackageReference>
 	</ItemGroup>
 
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\Presentation\Presentation.csproj" />
+	  <ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
+	</ItemGroup>
+
 </Project>

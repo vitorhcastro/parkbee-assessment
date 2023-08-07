@@ -11,6 +11,7 @@ public interface IParkingDbContext
     public DbSet<Garage> Garages { get; set; }
 
     public DbSet<User> Users { get; set; }
+    public DbSet<ParkingSession> ParkingSessions { get; set; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = new());
 

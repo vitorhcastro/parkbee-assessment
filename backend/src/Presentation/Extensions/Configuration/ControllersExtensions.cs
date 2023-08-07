@@ -1,8 +1,8 @@
-﻿using Api.Filters;
-using FluentValidation.AspNetCore;
+﻿using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Filters;
 
-namespace Api.Extensions.Configuration;
+namespace Presentation.Extensions.Configuration;
 
 public static class ControllersExtensions
 {

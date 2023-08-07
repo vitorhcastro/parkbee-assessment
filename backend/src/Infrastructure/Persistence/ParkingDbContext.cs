@@ -53,6 +53,7 @@ public class ParkingDbContext : DbContext, IParkingDbContext
         base.OnModelCreating(builder);
     }
 
+    public DbSet<ParkingSession> ParkingSessions { get; set; }
     public DbSet<Door> Doors { get; set; }
     public DbSet<Garage> Garages { get; set; }
     public DbSet<User> Users { get; set; }

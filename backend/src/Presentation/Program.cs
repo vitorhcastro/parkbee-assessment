@@ -1,6 +1,6 @@
-using Api.Extensions.Configuration;
 using Application;
 using Infrastructure;
+using Presentation.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 

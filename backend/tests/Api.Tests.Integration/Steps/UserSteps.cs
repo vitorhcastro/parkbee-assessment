@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Api.Tests.Integration.Drivers;
 using Api.Tests.Integration.Fixtures;
+using Domain.Common;
 using Domain.Entities;
 using FluentAssertions;
 using Infrastructure;
@@ -52,7 +53,7 @@ public class UserSteps : IClassFixture<IntegrationTestFixture>
     public async Task GivenHasNoRunningParkingSession(string userKey)
     {
         var user = this.featureContext.Get<User>(userKey);
-        var response = await this.driver.GetHttpClient().GetAsync($"/api/users/{user.Id}/parking-sessions");
+        var response = await this.driver.GetHttpClient().GetAsync($"/api/users/{user.Id}/parking-sessions?status={ParkingSessionStatus.Running}");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var parkingSessions = await response.Content.ReadFromJsonAsync<List<ParkingSession>>();
@@ -64,7 +65,7 @@ public class UserSteps : IClassFixture<IntegrationTestFixture>
     public async Task GivenHasARunningParkingSessionInAnyGarage(string userKey)
     {
         var user = this.featureContext.Get<User>(userKey);
-        var response = await this.driver.GetHttpClient().GetAsync($"/api/users/{user.Id}/parking-sessions");
+        var response = await this.driver.GetHttpClient().GetAsync($"/api/users/{user.Id}/parking-sessions?status={ParkingSessionStatus.Running}");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var parkingSessions = await response.Content.ReadFromJsonAsync<List<ParkingSession>>();

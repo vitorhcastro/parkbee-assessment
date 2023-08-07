@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Controllers;
+namespace Presentation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -25,12 +25,24 @@ public class GaragesController : ControllerBase
         return this.mediator.Send(new GetAllGaragesQuery(), cancellationToken);
     }
 
-    [HttpGet("{garageId}")]
+    [HttpGet("{garageId:guid}")]
     public async Task<ActionResult<GarageByIdDto>> GetGarage(Guid garageId, CancellationToken cancellationToken)
     {
         var query = new GetGarageByIdQuery(garageId);
         var garage = await this.mediator.Send(query, cancellationToken);
 
         return garage;
+    }
+
+    [HttpGet("{garageId:guid}/doors/{doorId:guid}/health")]
+    public void GetGarageDoorHealthStatus(Guid garageId, Guid doorId, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpGet("{garageId:guid}/doors/{doorId:guid}/status")]
+    public void GetGarageDoorStatus(Guid garageId, Guid doorId, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }
