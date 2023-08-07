@@ -42,7 +42,7 @@ public class CreateParkingSessionTests
     }
 
     [Fact]
-    public async Task should_return_health_status_from_query()
+    public async Task should_return_created_parking_session_id_from_command()
     {
         // Arrange
         var expected = new CreateParkingSessionResponse(TestParkingSession.Id);

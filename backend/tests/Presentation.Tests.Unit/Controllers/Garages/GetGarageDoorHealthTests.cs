@@ -42,7 +42,7 @@ public class GetGarageDoorHealthTests
     }
 
     [Fact]
-    public async Task should_return_health_status_from_query()
+    public async Task should_return_health_from_query()
     {
         // Arrange
         var expected = new GetGarageDoorHealthResponse

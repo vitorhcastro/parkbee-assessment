@@ -1,6 +1,5 @@
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Application.Common.Interfaces;
 
@@ -15,5 +14,5 @@ public interface IParkingDbContext
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = new());
 
-    EntityEntry Entry(object entity);
+    void SetModified(object entity);
 }

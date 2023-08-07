@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Api.Tests.Integration.Drivers;
 using Application.ParkingSessions.Commands.CreateParkingSession;
+using Application.ParkingSessions.Commands.UpdateParkingSessionStatus;
 using Domain.Entities;
 using FluentAssertions;
 
@@ -79,11 +80,7 @@ public class ParkingSessionSteps
         var createdParkingSession = this.scenarioContext.Get<CreateParkingSessionResponse>("create-parking-session-response");
         var garage = this.scenarioContext.Get<Garage>("current-garage");
         var exitDoor = garage.Doors.First(x => x.DoorType == DoorType.Exit);
-        var stopRequest = new UpdateParkingSessionStatusRequest
-        {
-            Status = ParkingSessionStatus.Stopped,
-            ExitDoorId = exitDoor.Id,
-        };
+        var stopRequest = new UpdateParkingSessionStatusRequest(exitDoor.Id, ParkingSessionStatus.Stopped);
         var response = await this.driver.GetHttpClient().PutAsJsonAsync($"/api/parking-sessions/{createdParkingSession.Id}/status", stopRequest);
         this.scenarioContext.Set(response, "stop-parking-session-response");
         this.scenarioContext.Set(exitDoor, "current-door");
@@ -102,7 +99,7 @@ public class ParkingSessionSteps
         var createdParkingSession = this.scenarioContext.Get<CreateParkingSessionResponse>("create-parking-session-response");
         var response = await this.driver.GetHttpClient().GetAsync($"/api/parking-sessions/{createdParkingSession.Id}");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var parkingSession = await response.Content.ReadFromJsonAsync<GetParkingSessionByIdResponse>();
+        var parkingSession = await response.Content.ReadFromJsonAsync<ParkingSession>();
         parkingSession.Status.Should().Be(ParkingSessionStatus.Stopped);
         this.scenarioContext.Set(response, "stop-parking-session-response");
     }

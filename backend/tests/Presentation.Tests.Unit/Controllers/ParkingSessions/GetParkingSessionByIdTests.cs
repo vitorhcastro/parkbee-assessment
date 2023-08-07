@@ -40,7 +40,7 @@ public class GetParkingSessionByIdTests
     }
 
     [Fact]
-    public async Task should_return_health_status_from_query()
+    public async Task should_return_parking_session_from_query()
     {
         // Arrange
         mediatorMock

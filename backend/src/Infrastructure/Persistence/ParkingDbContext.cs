@@ -46,6 +46,11 @@ public class ParkingDbContext : DbContext, IParkingDbContext
         return result;
     }
 
+    public void SetModified(object entity)
+    {
+        base.Entry(entity).State = EntityState.Modified;
+    }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

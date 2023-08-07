@@ -1,12 +1,17 @@
 using Application.ParkingSessions.Commands.CreateParkingSession;
+using Application.ParkingSessions.Commands.UpdateParkingSessionStatus;
 using Application.ParkingSessions.Queries.GetParkingSessionById;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers;
 
-public class ParkingSessionsController
+[ApiController]
+[Route("[controller]")]
+[Authorize]
+public class ParkingSessionsController : ControllerBase
 {
     private readonly IMediator mediator;
 
@@ -31,8 +36,10 @@ public class ParkingSessionsController
     }
 
     [HttpPut("{id:guid}/status")]
-    public void UpdateParkingSessionStatus(Guid id)
+    public async Task<IActionResult> UpdateParkingSessionStatus(Guid id, UpdateParkingSessionStatusRequest request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var command = new UpdateParkingSessionStatusCommand(id, request);
+        await this.mediator.Send(command, cancellationToken);
+        return NoContent();
     }
 }
