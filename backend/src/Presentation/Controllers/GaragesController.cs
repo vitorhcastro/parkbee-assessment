@@ -28,7 +28,7 @@ public class GaragesController : ControllerBase
     }
 
     [HttpGet("{garageId:guid}")]
-    public async Task<ActionResult<GarageByIdDto>> GetGarage(Guid garageId, CancellationToken cancellationToken)
+    public async Task<ActionResult<GetGarageByIdResponse>> GetGarage(Guid garageId, CancellationToken cancellationToken)
     {
         var query = new GetGarageByIdQuery(garageId);
         var garage = await this.mediator.Send(query, cancellationToken);

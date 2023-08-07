@@ -7,15 +7,15 @@ namespace Application.Users.Queries.GetAllUsersByPartnerId;
 
 public class GetAllUsersByPartnerIdQueryHandler : IRequestHandler<GetAllUsersByPartnerIdQuery, List<User>>
 {
-    private IParkingDbContext parkingDbContext;
+    private readonly IParkingDbContext dbContext;
 
-    public GetAllUsersByPartnerIdQueryHandler(IParkingDbContext parkingDbContext)
+    public GetAllUsersByPartnerIdQueryHandler(IParkingDbContext dbContext)
     {
-        this.parkingDbContext = parkingDbContext;
+        this.dbContext = dbContext;
     }
 
     public Task<List<User>> Handle(GetAllUsersByPartnerIdQuery request, CancellationToken cancellationToken)
     {
-        return parkingDbContext.Users.Where(x => x.PartnerId == request.PartnerId).ToListAsync(cancellationToken);
+        return dbContext.Users.Where(x => x.PartnerId == request.PartnerId).ToListAsync(cancellationToken);
     }
 }

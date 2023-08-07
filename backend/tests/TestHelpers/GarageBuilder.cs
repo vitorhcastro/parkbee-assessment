@@ -6,7 +6,8 @@ public class GarageBuilder
 {
     private Guid id = Guid.NewGuid();
     private string name = Guid.NewGuid().ToString();
-    private List<Door> doors = new();
+    private readonly List<Door> doors = new();
+    private int totalSpots = 100;
 
     public static GarageBuilder AGarage()
     {
@@ -31,6 +32,12 @@ public class GarageBuilder
         return this;
     }
 
+    public GarageBuilder WithTotalSpots(int totalSpots)
+    {
+        this.totalSpots = totalSpots;
+        return this;
+    }
+
     public Garage Build()
     {
         return new Garage()
@@ -38,6 +45,7 @@ public class GarageBuilder
             Id = this.id,
             Name = this.name,
             Doors = this.doors,
+            TotalSpots = this.totalSpots,
         };
     }
 }

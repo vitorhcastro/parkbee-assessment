@@ -7,15 +7,15 @@ namespace Application.Garages.Queries.GetAllGarages;
 
 public class GetAllGaragesQueryHandler : IRequestHandler<GetAllGaragesQuery, List<Garage>>
 {
-    private readonly IParkingDbContext parkingDbContext;
+    private readonly IParkingDbContext dbContext;
 
-    public GetAllGaragesQueryHandler(IParkingDbContext parkingDbContext)
+    public GetAllGaragesQueryHandler(IParkingDbContext dbContext)
     {
-        this.parkingDbContext = parkingDbContext;
+        this.dbContext = dbContext;
     }
 
     public Task<List<Garage>> Handle(GetAllGaragesQuery request, CancellationToken cancellationToken)
     {
-        return this.parkingDbContext.Garages.Include(x => x.Doors).ToListAsync(cancellationToken);
+        return this.dbContext.Garages.Include(x => x.Doors).ToListAsync(cancellationToken);
     }
 }

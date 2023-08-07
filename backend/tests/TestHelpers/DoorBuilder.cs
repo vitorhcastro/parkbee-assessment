@@ -7,6 +7,7 @@ public class DoorBuilder
 {
     private Guid id = Guid.NewGuid();
     private Garage garage = AGarage().Build();
+    private DoorType doorType = DoorType.Entry;
 
     public static DoorBuilder ADoor()
     {
@@ -25,6 +26,12 @@ public class DoorBuilder
         return this;
     }
 
+    public DoorBuilder WithDoorType(DoorType doorType)
+    {
+        this.doorType = doorType;
+        return this;
+    }
+
     public Door Build()
     {
         return new Door()
@@ -32,6 +39,7 @@ public class DoorBuilder
             Id = this.id,
             GarageId = this.garage.Id,
             Garage = this.garage,
+            DoorType = this.doorType,
         };
     }
 }

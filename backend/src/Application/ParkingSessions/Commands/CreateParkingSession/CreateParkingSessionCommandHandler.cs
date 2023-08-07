@@ -1,6 +1,7 @@
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Domain.Entities;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +13,9 @@ public class
     private readonly IParkingDbContext dbContext;
     private readonly IDoorGateway doorGateway;
 
-    public CreateParkingSessionCommandHandler(IParkingDbContext dbContext, IDoorGateway doorGateway)
+    public CreateParkingSessionCommandHandler(
+        IParkingDbContext dbContext,
+        IDoorGateway doorGateway)
     {
         this.dbContext = dbContext;
         this.doorGateway = doorGateway;
@@ -27,9 +30,9 @@ public class
             throw new NotFoundException(nameof(User), request.Request.UserId);
         }
 
-        var garageExists =
-            await this.dbContext.Garages.AnyAsync(g => g.Id == request.Request.GarageId, cancellationToken);
-        if (!garageExists)
+        var garage =
+            await this.dbContext.Garages.FirstOrDefaultAsync(g => g.Id == request.Request.GarageId, cancellationToken);
+        if (garage == null)
         {
             throw new NotFoundException(nameof(Garage), request.Request.GarageId);
         }
@@ -39,6 +42,34 @@ public class
         if (door == null)
         {
             throw new NotFoundException(nameof(Door), request.Request.DoorId);
+        }
+
+        var failures = new List<ValidationFailure>();
+
+        var parkingSessionExists = await this.dbContext.ParkingSessions.AnyAsync(
+            ps => ps.UserId == request.Request.UserId && ps.Status == ParkingSessionStatus.Running, cancellationToken);
+        if (parkingSessionExists)
+        {
+            failures.Add(new(nameof(ParkingSession), "User already has a running parking session"));
+        }
+
+        var runningParkingSessions = await this.dbContext.ParkingSessions
+            .Where(ps => garage.Doors.Any(d => d.Id == ps.EntryDoorId))
+            .CountAsync(ps => ps.Status == ParkingSessionStatus.Running, cancellationToken: cancellationToken);
+        if (runningParkingSessions >= garage.TotalSpots)
+        {
+            failures.Add(new(nameof(ParkingSession), "Garage is full"));
+        }
+
+        var doorHealth = await this.doorGateway.CheckHealth(door);
+        if (doorHealth != DoorHealth.Ok)
+        {
+            failures.Add(new(nameof(ParkingSession), "Door is not working"));
+        }
+
+        if (failures.Any())
+        {
+            throw new ValidationException(failures);
         }
 
         var parkingSession = new ParkingSession

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.EntityFrameworkCore;
 using static TestHelpers.DoorBuilder;
+using static TestHelpers.GarageBuilder;
 using static TestHelpers.ParkingSessionBuilder;
 
 namespace Application.Tests.Unit.ParkingSessions.Commands;
@@ -42,6 +43,9 @@ public class CreateParkingSessionTests
             .ReturnsAsync(1);
 
         gatewayMock = new Mock<IDoorGateway>();
+        gatewayMock
+            .Setup(x => x.CheckHealth(TestParkingSession.EntryDoor))
+            .ReturnsAsync(DoorHealth.Ok);
 
         commandHandler = new CreateParkingSessionCommandHandler(dbContextMock.Object, gatewayMock.Object);
     }
@@ -147,5 +151,75 @@ public class CreateParkingSessionTests
 
         // Assert
         this.gatewayMock.Verify(m => m.OpenDoor(TestParkingSession.EntryDoor), Times.Once);
+    }
+
+    [Fact]
+    public async Task should_throw_validation_exception_if_user_already_has_running_session()
+    {
+        // Arrange
+        dbContextMock
+            .Setup<DbSet<ParkingSession>>(m => m.ParkingSessions)
+            .ReturnsDbSet(new List<ParkingSession> { AParkingSession().WithUser(TestParkingSession.User).Build() });
+
+        // Act
+        Func<Task> act = async () =>
+            await commandHandler.Handle(new CreateParkingSessionCommand(TestRequest),
+                CancellationToken.None);
+
+        // Assert
+        await act.Should().ThrowAsync<ValidationException>();
+    }
+
+    [Fact]
+    public async Task should_throw_validation_exception_if_garage_has_no_available_spots()
+    {
+        // Arrange
+        var door = ADoor().Build();
+        var garage = AGarage().WithTotalSpots(1).WithDoor(door).Build();
+        door.GarageId = garage.Id;
+        var parkingSession = AParkingSession().WithEntryDoor(door).Build();
+        dbContextMock
+            .Setup<DbSet<Garage>>(m => m.Garages)
+            .ReturnsDbSet(new List<Garage> { garage });
+        dbContextMock
+            .Setup<DbSet<ParkingSession>>(m => m.ParkingSessions)
+            .ReturnsDbSet(new List<ParkingSession> { parkingSession });
+        dbContextMock
+            .Setup<DbSet<User>>(m => m.Users)
+            .ReturnsDbSet(new List<User> { parkingSession.User });
+        dbContextMock
+            .Setup<DbSet<Door>>(m => m.Doors)
+            .ReturnsDbSet(new List<Door> { door });
+
+        // Act
+        Func<Task> act = async () =>
+            await commandHandler.Handle(
+                new CreateParkingSessionCommand(
+                    new CreateParkingSessionRequest(
+                        parkingSession.UserId,
+                        garage.Id,
+                        door.Id)),
+                CancellationToken.None);
+
+        // Assert
+        await act.Should().ThrowAsync<ValidationException>();
+    }
+
+    [Theory]
+    [InlineData(DoorHealth.Unreachable)]
+    [InlineData(DoorHealth.Unknown)]
+    public async Task should_throw_validation_exception_if_door_is_not_ok(DoorHealth doorHealth)
+    {
+        // Arrange
+        this.gatewayMock
+            .Setup(m => m.CheckHealth(TestParkingSession.EntryDoor))
+            .ReturnsAsync(doorHealth);
+
+        // Act
+        Func<Task> act = async () =>
+            await commandHandler.Handle(new CreateParkingSessionCommand(TestRequest), CancellationToken.None);
+
+        // Assert
+        await act.Should().ThrowAsync<ValidationException>();
     }
 }

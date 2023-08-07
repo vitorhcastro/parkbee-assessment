@@ -32,7 +32,7 @@ public class ParkingSessionSteps
         var currentGarage = this.scenarioContext.Get<Garage>("current-garage");
         var currentDoor = this.scenarioContext.Get<Door>("current-door");
         var parkingSession = new CreateParkingSessionRequest(currentUser.Id, currentGarage.Id, currentDoor.Id);
-        var response = await this.driver.GetHttpClient().PostAsJsonAsync("/api/parking-sessions", parkingSession);
+        var response = await this.driver.GetHttpClient().PostAsJsonAsync("/api/ParkingSessions", parkingSession);
         this.scenarioContext.Set(response, "create-parking-session-response");
     }
 
@@ -68,7 +68,7 @@ public class ParkingSessionSteps
         var currentGarage = this.featureContext.Get<Garage>(garageKey);
         var door = currentGarage.Doors.First(x => x.DoorType == DoorType.Entry);
         var parkingSession = new CreateParkingSessionRequest(currentUser.Id, currentGarage.Id, door.Id);
-        var response = await this.driver.GetHttpClient().PostAsJsonAsync("/api/parking-sessions", parkingSession);
+        var response = await this.driver.GetHttpClient().PostAsJsonAsync("/api/ParkingSessions", parkingSession);
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         var createdParkingSession = await response.Content.ReadFromJsonAsync<CreateParkingSessionResponse>();
         this.scenarioContext.Set(createdParkingSession, "create-parking-session-response");
@@ -81,7 +81,7 @@ public class ParkingSessionSteps
         var garage = this.scenarioContext.Get<Garage>("current-garage");
         var exitDoor = garage.Doors.First(x => x.DoorType == DoorType.Exit);
         var stopRequest = new UpdateParkingSessionStatusRequest(exitDoor.Id, ParkingSessionStatus.Stopped);
-        var response = await this.driver.GetHttpClient().PutAsJsonAsync($"/api/parking-sessions/{createdParkingSession.Id}/status", stopRequest);
+        var response = await this.driver.GetHttpClient().PutAsJsonAsync($"/api/ParkingSessions/{createdParkingSession.Id}/status", stopRequest);
         this.scenarioContext.Set(response, "stop-parking-session-response");
         this.scenarioContext.Set(exitDoor, "current-door");
     }
@@ -97,7 +97,7 @@ public class ParkingSessionSteps
     public async Task ThenParkingSessionShouldBeStopped()
     {
         var createdParkingSession = this.scenarioContext.Get<CreateParkingSessionResponse>("create-parking-session-response");
-        var response = await this.driver.GetHttpClient().GetAsync($"/api/parking-sessions/{createdParkingSession.Id}");
+        var response = await this.driver.GetHttpClient().GetAsync($"/api/ParkingSessions/{createdParkingSession.Id}");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var parkingSession = await response.Content.ReadFromJsonAsync<ParkingSession>();
         parkingSession.Status.Should().Be(ParkingSessionStatus.Stopped);

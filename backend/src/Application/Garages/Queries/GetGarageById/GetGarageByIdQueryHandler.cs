@@ -7,22 +7,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Garages.Queries.GetGarageById;
 
-public class GetGarageByIdQueryHandler : IRequestHandler<GetGarageByIdQuery, GarageByIdDto>
+public class GetGarageByIdQueryHandler : IRequestHandler<GetGarageByIdQuery, GetGarageByIdResponse>
 {
-    private IParkingDbContext parkingDbContext;
-    private readonly IMapper mapper;
+    private readonly IParkingDbContext dbContext;
 
     public GetGarageByIdQueryHandler(
-        IParkingDbContext parkingDbContext,
-        IMapper mapper)
+        IParkingDbContext dbContext)
     {
-        this.parkingDbContext = parkingDbContext;
-        this.mapper = mapper;
+        this.dbContext = dbContext;
     }
 
-    public async Task<GarageByIdDto> Handle(GetGarageByIdQuery request, CancellationToken cancellationToken)
+    public async Task<GetGarageByIdResponse> Handle(GetGarageByIdQuery request, CancellationToken cancellationToken)
     {
-        var garage = await this.parkingDbContext.Garages.Include(x => x.Doors)
+        var garage = await this.dbContext.Garages
+            .Include(x => x.Doors)
             .FirstOrDefaultAsync(g => g.Id == request.Id, cancellationToken);
 
         if (garage == null)
@@ -30,6 +28,10 @@ public class GetGarageByIdQueryHandler : IRequestHandler<GetGarageByIdQuery, Gar
             throw new NotFoundException(nameof(Garage), request.Id);
         }
 
-        return this.mapper.Map<GarageByIdDto>(garage);
+        var runningParkingSessions = await this.dbContext.ParkingSessions
+            .Where(ps => garage.Doors.Any(d => d.Id == ps.EntryDoorId))
+            .CountAsync(ps => ps.Status == ParkingSessionStatus.Running, cancellationToken: cancellationToken);
+
+        return new GetGarageByIdResponse(garage.Id, garage.Name, garage.TotalSpots, garage.Doors, garage.TotalSpots - runningParkingSessions);
     }
 }

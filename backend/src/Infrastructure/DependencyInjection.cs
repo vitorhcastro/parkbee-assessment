@@ -37,9 +37,9 @@ public static class DependencyInjection
     public static void AddSeedData(this WebApplication app)
     {
         var scope = app.Services.CreateScope();
-        var parkingDbContext = scope.ServiceProvider.GetService<ParkingDbContext>();
+        var dbContext = scope.ServiceProvider.GetService<ParkingDbContext>();
 
-        parkingDbContext.Garages.AddRange(Enumerable.Range(0, 10).Select(x => new Garage
+        dbContext.Garages.AddRange(Enumerable.Range(0, 10).Select(x => new Garage
         {
             Id = Guid.NewGuid(),
             Name = $"Garage {Guid.NewGuid()}",
@@ -65,12 +65,12 @@ public static class DependencyInjection
                 }
             }
         }));
-        parkingDbContext.Users.AddRange(Enumerable.Range(0, 20).Select(x => new User()
+        dbContext.Users.AddRange(Enumerable.Range(0, 20).Select(x => new User()
         {
             Id = Guid.NewGuid(),
             PartnerId = "partner-1"
         }));
 
-        parkingDbContext.SaveChanges();
+        dbContext.SaveChanges();
     }
 }

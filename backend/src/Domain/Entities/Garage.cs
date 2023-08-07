@@ -7,4 +7,6 @@ public class Garage
     public string Name { get; set; }
 
     public List<Door> Doors { get; set; }
+
+    public int TotalSpots { get; set; }
 }

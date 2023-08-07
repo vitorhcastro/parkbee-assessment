@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.EntityFrameworkCore;
 
-namespace Application.Tests.Unit.Garages.Queries;
-
 using static TestHelpers.DoorBuilder;
 using static TestHelpers.GarageBuilder;
+
+namespace Application.Tests.Unit.Garages.Queries;
 
 public class GetGarageDoorHealthQueryTests
 {
