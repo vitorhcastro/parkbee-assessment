@@ -18,7 +18,7 @@ public class GetGarageDoorHealthQueryTests
     private static readonly Garage TestGarage = AGarage().WithDoor(TestDoor).Build();
 
     private readonly Mock<IParkingDbContext> dbContextMock;
-    private readonly Mock<IDoorStatusGateway> gatewayMock;
+    private readonly Mock<IDoorGateway> gatewayMock;
     private readonly GetGarageDoorHealthQueryHandler queryHandler;
 
     public GetGarageDoorHealthQueryTests()
@@ -30,7 +30,7 @@ public class GetGarageDoorHealthQueryTests
         dbContextMock
             .Setup<DbSet<Door>>(m => m.Doors)
             .ReturnsDbSet(new List<Door> { TestDoor });
-        gatewayMock = new Mock<IDoorStatusGateway>();
+        gatewayMock = new Mock<IDoorGateway>();
         queryHandler = new GetGarageDoorHealthQueryHandler(dbContextMock.Object, gatewayMock.Object);
     }
 

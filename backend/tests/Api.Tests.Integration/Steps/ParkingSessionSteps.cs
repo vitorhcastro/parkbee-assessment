@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using Api.Tests.Integration.Drivers;
+using Application.ParkingSessions.Commands.CreateParkingSession;
 using Domain.Entities;
 using FluentAssertions;
 
@@ -29,12 +30,7 @@ public class ParkingSessionSteps
         var currentUser = this.scenarioContext.Get<User>("current-user");
         var currentGarage = this.scenarioContext.Get<Garage>("current-garage");
         var currentDoor = this.scenarioContext.Get<Door>("current-door");
-        var parkingSession = new CreateParkingSessionRequest()
-        {
-            UserId = currentUser.Id,
-            GarageId = currentGarage.Id,
-            DoorId = currentDoor.Id,
-        };
+        var parkingSession = new CreateParkingSessionRequest(currentUser.Id, currentGarage.Id, currentDoor.Id);
         var response = await this.driver.GetHttpClient().PostAsJsonAsync("/api/parking-sessions", parkingSession);
         this.scenarioContext.Set(response, "create-parking-session-response");
     }
@@ -70,12 +66,7 @@ public class ParkingSessionSteps
         var currentUser = this.featureContext.Get<User>(userKey);
         var currentGarage = this.featureContext.Get<Garage>(garageKey);
         var door = currentGarage.Doors.First(x => x.DoorType == DoorType.Entry);
-        var parkingSession = new CreateParkingSessionRequest()
-        {
-            UserId = currentUser.Id,
-            GarageId = currentGarage.Id,
-            DoorId = door.Id,
-        };
+        var parkingSession = new CreateParkingSessionRequest(currentUser.Id, currentGarage.Id, door.Id);
         var response = await this.driver.GetHttpClient().PostAsJsonAsync("/api/parking-sessions", parkingSession);
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         var createdParkingSession = await response.Content.ReadFromJsonAsync<CreateParkingSessionResponse>();

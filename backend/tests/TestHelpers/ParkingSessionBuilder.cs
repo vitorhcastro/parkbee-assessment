@@ -1,4 +1,5 @@
 using Domain.Entities;
+using static TestHelpers.DoorBuilder;
 using static TestHelpers.UserBuilder;
 
 namespace TestHelpers;
@@ -10,6 +11,8 @@ public class ParkingSessionBuilder
     private DateTime startDate = DateTime.UtcNow;
     private DateTime? endDate;
     private ParkingSessionStatus status = ParkingSessionStatus.Running;
+    private Door entryDoor = ADoor().Build();
+    private Door? exitDoor;
 
     public static ParkingSessionBuilder AParkingSession()
     {
@@ -46,6 +49,18 @@ public class ParkingSessionBuilder
         return this;
     }
 
+    public ParkingSessionBuilder WithEntryDoor(Door entryDoor)
+    {
+        this.entryDoor = entryDoor;
+        return this;
+    }
+
+    public ParkingSessionBuilder WithExitDoor(Door exitDoor)
+    {
+        this.exitDoor = exitDoor;
+        return this;
+    }
+
     public ParkingSession Build()
     {
         return new ParkingSession()
@@ -56,6 +71,10 @@ public class ParkingSessionBuilder
             StartDate = this.startDate,
             EndDate = this.endDate,
             Status = this.status,
+            EntryDoorId = this.entryDoor.Id,
+            EntryDoor = this.entryDoor,
+            ExitDoorId = this.exitDoor?.Id,
+            ExitDoor = this.exitDoor,
         };
     }
 }

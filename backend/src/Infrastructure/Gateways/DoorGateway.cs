@@ -3,7 +3,7 @@ using Domain.Entities;
 
 namespace Infrastructure.Gateways;
 
-public class DoorStatusGateway : IDoorStatusGateway
+public class DoorGateway : IDoorGateway
 {
     public Task<DoorHealth> CheckHealth(Door door)
     {
@@ -11,6 +11,11 @@ public class DoorStatusGateway : IDoorStatusGateway
     }
 
     public Task<DoorStatus> CheckStatus(Door door)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task OpenDoor(Door door)
     {
         throw new NotImplementedException();
     }

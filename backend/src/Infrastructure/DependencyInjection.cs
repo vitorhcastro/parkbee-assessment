@@ -1,6 +1,7 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Entities;
 using Infrastructure.Authorization;
+using Infrastructure.Gateways;
 using Infrastructure.Persistence;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
@@ -27,6 +28,8 @@ public static class DependencyInjection
                 null);
 
         services.AddSingleton<ICurrentUserService, CurrentUserService>();
+
+        services.AddScoped<IDoorGateway, DoorGateway>();
 
         return services;
     }

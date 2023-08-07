@@ -1,3 +1,4 @@
+using Application.ParkingSessions.Commands.CreateParkingSession;
 using Application.ParkingSessions.Queries.GetParkingSessionById;
 using Domain.Entities;
 using MediatR;
@@ -7,24 +8,26 @@ namespace Presentation.Controllers;
 
 public class ParkingSessionsController
 {
-    private readonly IMediator _mediator;
+    private readonly IMediator mediator;
 
     public ParkingSessionsController(IMediator mediator)
     {
-        _mediator = mediator;
+        this.mediator = mediator;
     }
 
     [HttpPost]
-    public void CreateParkingSession()
+    public Task<CreateParkingSessionResponse> CreateParkingSession(CreateParkingSessionRequest request,
+        CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var command = new CreateParkingSessionCommand(request);
+        return this.mediator.Send(command, cancellationToken);
     }
 
     [HttpGet("id:guid")]
     public Task<ParkingSession> GetParkingSessionById(Guid id, CancellationToken cancellationToken)
     {
         var query = new GetParkingSessionByIdQuery(id);
-        return this._mediator.Send(query, cancellationToken);
+        return this.mediator.Send(query, cancellationToken);
     }
 
     [HttpPut("{id:guid}/status")]

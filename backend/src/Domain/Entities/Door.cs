@@ -7,4 +7,7 @@ public class Door
     public string Description { get; set; }
 
     public DoorType DoorType { get; set; }
+
+    public Guid GarageId { get; set; }
+    public Garage Garage { get; set; }
 }

@@ -49,7 +49,8 @@ public class GetParkingSessionByIdTests
             .ReturnsAsync(TestParkingSession);
 
         // Act
-        var actual = await parkingSessionsController.GetParkingSessionById(TestParkingSession.Id, CancellationToken.None);
+        var actual =
+            await parkingSessionsController.GetParkingSessionById(TestParkingSession.Id, CancellationToken.None);
 
         // Assert
         actual.Should().BeEquivalentTo(TestParkingSession);

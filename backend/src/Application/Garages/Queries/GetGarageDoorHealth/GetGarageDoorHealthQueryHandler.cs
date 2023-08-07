@@ -10,14 +10,14 @@ public class GetGarageDoorHealthQueryHandler : IRequestHandler<GetGarageDoorHeal
     GetGarageDoorHealthResponse>
 {
     private readonly IParkingDbContext dbContext;
-    private readonly IDoorStatusGateway doorStatusGateway;
+    private readonly IDoorGateway doorGateway;
 
     public GetGarageDoorHealthQueryHandler(
         IParkingDbContext dbContext,
-        IDoorStatusGateway doorStatusGateway)
+        IDoorGateway doorGateway)
     {
         this.dbContext = dbContext;
-        this.doorStatusGateway = doorStatusGateway;
+        this.doorGateway = doorGateway;
     }
 
     public async Task<GetGarageDoorHealthResponse> Handle(GetGarageDoorHealthQuery request,
@@ -37,7 +37,7 @@ public class GetGarageDoorHealthQueryHandler : IRequestHandler<GetGarageDoorHeal
             throw new NotFoundException(nameof(Door), request.DoorId);
         }
 
-        var healthStatus = await this.doorStatusGateway.CheckHealth(door);
+        var healthStatus = await this.doorGateway.CheckHealth(door);
 
         return new GetGarageDoorHealthResponse
         {
