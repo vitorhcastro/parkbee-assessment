@@ -12,8 +12,8 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
     {
         new ApiClient
         {
-            PartnerId = "partner-1",
-            ApiKeys = new[] { "4ef18f62-c77a-447e-a3b6-c4bf2e5027d0" }
+            PartnerId = ApplicationConstants.Authentication.DefaultPartnerId,
+            ApiKeys = new[] { ApplicationConstants.Authentication.DefaultApiKey }
         }
     };
 
@@ -34,7 +34,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
 
         Logger.BeginScope("{PartnerId}", apiClient.PartnerId);
 
-        var claims = new[] { new Claim(CustomClaimNames.PartnerId, apiClient.PartnerId) };
+        var claims = new[] { new Claim(ApplicationConstants.Authentication.PartnerIdCustomClaim, apiClient.PartnerId) };
         var identity = new ClaimsIdentity(claims, ApiKeyAuthenticationOptions.DefaultScheme);
         var identities = new List<ClaimsIdentity> { identity };
         var principal = new ClaimsPrincipal(identities);
@@ -54,7 +54,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
         return ApiClients.First();
     }
 
-    class ApiClient
+    private class ApiClient
     {
         public string[] ApiKeys { get; set; }
 

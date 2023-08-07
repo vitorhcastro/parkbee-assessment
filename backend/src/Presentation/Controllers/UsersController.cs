@@ -1,6 +1,6 @@
 using Application.Users.Queries.GetAllUsersByPartnerId;
 using Domain.Entities;
-using Infrastructure.Authorization;
+using Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +22,7 @@ public class UsersController : ControllerBase
     [HttpGet]
     public async Task<List<User>> GetUsers(CancellationToken cancellationToken)
     {
-        var partnerId = User.Claims.First(x => x.Type == CustomClaimNames.PartnerId).Value;
+        var partnerId = User.Claims.First(x => x.Type == ApplicationConstants.Authentication.PartnerIdCustomClaim).Value;
         var query = new GetAllUsersByPartnerIdQuery(partnerId);
 
         return await this.mediator.Send(query, cancellationToken);
