@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Api.Tests.Integration.Drivers;
 using Api.Tests.Integration.Fixtures;
+using Application.ParkingSessions.Commands.CreateParkingSession;
 using Domain.Entities;
 using FluentAssertions;
 using Infrastructure;
@@ -52,7 +53,7 @@ public class UserSteps : IClassFixture<IntegrationTestFixture>
     public async Task GivenHasNoRunningParkingSession(string userKey)
     {
         var user = this.featureContext.Get<User>(userKey);
-        var response = await this.driver.GetHttpClient().GetAsync($"/api/Users/{user.Id}/parking-sessions?status={ParkingSessionStatus.Running}");
+        var response = await this.driver.GetHttpClient().GetAsync($"/Users/{user.Id}/parking-sessions?status={ParkingSessionStatus.Running}");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var parkingSessions = await response.Content.ReadFromJsonAsync<List<ParkingSession>>();
@@ -60,11 +61,17 @@ public class UserSteps : IClassFixture<IntegrationTestFixture>
         this.scenarioContext.Set(user, "current-user");
     }
 
-    [Given(@"""(.*)"" has a running parking session in any garage")]
-    public async Task GivenHasARunningParkingSessionInAnyGarage(string userKey)
+    [Given(@"""(.*)"" has a running parking session in ""(.*)""")]
+    public async Task GivenHasARunningParkingSessionInAnyGarage(string userKey, string garageKey)
     {
         var user = this.featureContext.Get<User>(userKey);
-        var response = await this.driver.GetHttpClient().GetAsync($"/api/Users/{user.Id}/parking-sessions?status={ParkingSessionStatus.Running}");
+        var garage = this.featureContext.Get<Garage>(garageKey);
+        var door = garage.Doors.FirstOrDefault(x => x.DoorType == DoorType.Entry);
+        var parkingSession = new CreateParkingSessionRequest(user.Id, garage.Id, door.Id);
+        var createResponse = await this.driver.GetHttpClient().PostAsJsonAsync("/ParkingSessions", parkingSession);
+        createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+
+        var response = await this.driver.GetHttpClient().GetAsync($"/Users/{user.Id}/parking-sessions?status={ParkingSessionStatus.Running}");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var parkingSessions = await response.Content.ReadFromJsonAsync<List<ParkingSession>>();

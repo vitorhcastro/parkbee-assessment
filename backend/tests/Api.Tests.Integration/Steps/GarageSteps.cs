@@ -41,6 +41,7 @@ public class GarageSteps : IClassFixture<IntegrationTestFixture>
             {
                 Id = Guid.NewGuid(),
                 Name = row.Garage,
+                TotalSpots = row.TotalSpots,
                 Doors = new List<Door>
                 {
                     new()
@@ -48,7 +49,7 @@ public class GarageSteps : IClassFixture<IntegrationTestFixture>
                         Id = Guid.NewGuid(),
                         Description = "Entry",
                         DoorType = DoorType.Entry,
-                        IpAddress = ApplicationConstants.ParkbeeDotComIpAddress,
+                        IpAddress = row.DoorHealth == DoorHealth.Ok ? ApplicationConstants.ParkbeeDotComIpAddress : string.Empty,
                     },
                     new()
                     {
@@ -78,7 +79,7 @@ public class GarageSteps : IClassFixture<IntegrationTestFixture>
     public async Task GivenHasAvailableSpots(string garageKey)
     {
         var garage = this.featureContext.Get<Garage>(garageKey);
-        var response = await this.driver.GetHttpClient().GetAsync($"/api/Garages/{garage.Id}");
+        var response = await this.driver.GetHttpClient().GetAsync($"/Garages/{garage.Id}");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var garageByIdDto = await response.Content.ReadFromJsonAsync<GetGarageByIdResponse>();
@@ -91,12 +92,12 @@ public class GarageSteps : IClassFixture<IntegrationTestFixture>
     {
         var garage = this.scenarioContext.Get<Garage>("current-garage");
         var door = garage.Doors.First(x => x.DoorType == DoorType.Entry);
-        var response = await this.driver.GetHttpClient().GetAsync($"/api/Garages/{garage.Id}/doors/{door.Id}/health");
+        var response = await this.driver.GetHttpClient().GetAsync($"/Garages/{garage.Id}/doors/{door.Id}/health");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var health = await response.Content.ReadFromJsonAsync<GetGarageDoorHealthResponse>();
         health.Health.Should().Be(DoorHealth.Ok);
-        this.scenarioContext.Set(garage, "current-door");
+        this.scenarioContext.Set(door, "current-door");
     }
 
     [Then(@"(.*) door should open")]
@@ -105,7 +106,7 @@ public class GarageSteps : IClassFixture<IntegrationTestFixture>
         var doorTypeParsed = Enum.Parse<DoorType>(doorType);
         var currentDoor = this.scenarioContext.Get<Door>("current-door");
         currentDoor.DoorType.Should().Be(doorTypeParsed);
-        var response = await this.driver.GetHttpClient().GetAsync($"/api/doors/{currentDoor.Id}/status");
+        var response = await this.driver.GetHttpClient().GetAsync($"/Garages/{currentDoor.GarageId}/doors/{currentDoor.Id}/status");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var health = await response.Content.ReadFromJsonAsync<GetGarageDoorStatusResponse>();
@@ -116,12 +117,13 @@ public class GarageSteps : IClassFixture<IntegrationTestFixture>
     public async Task GivenHasNoParkingSpotsAvailable(string garageKey)
     {
         var garage = this.featureContext.Get<Garage>(garageKey);
-        var response = await this.driver.GetHttpClient().GetAsync($"/api/Garages/{garage.Id}");
+        var response = await this.driver.GetHttpClient().GetAsync($"/Garages/{garage.Id}");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var garageByIdDto = await response.Content.ReadFromJsonAsync<GetGarageByIdResponse>();
         garageByIdDto.AvailableSpots.Should().Be(0);
         this.scenarioContext.Set(garage, "current-garage");
+        this.scenarioContext.Set(garage.Doors.First(x => x.DoorType == DoorType.Entry), "current-door");
     }
 
     [Given(@"""(.*)"" (.*) door hardware is not reachable")]
@@ -130,13 +132,13 @@ public class GarageSteps : IClassFixture<IntegrationTestFixture>
         var garage = this.featureContext.Get<Garage>(garageKey);
         var doorTypeParsed = Enum.Parse<DoorType>(doorType);
         var door = garage.Doors.First(x => x.DoorType == doorTypeParsed);
-        var response = await this.driver.GetHttpClient().GetAsync($"/api/Garages/{garage.Id}/doors/{door.Id}/health");
+        var response = await this.driver.GetHttpClient().GetAsync($"/Garages/{garage.Id}/doors/{door.Id}/health");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var health = await response.Content.ReadFromJsonAsync<GetGarageDoorHealthResponse>();
         health.Health.Should().Be(DoorHealth.Unreachable);
-        this.scenarioContext.Set(garage, "current-door");
+        this.scenarioContext.Set(door, "current-door");
     }
 }
 
-public record GarageTable(string Garage);
+public record GarageTable(string Garage, int TotalSpots, DoorHealth DoorHealth);

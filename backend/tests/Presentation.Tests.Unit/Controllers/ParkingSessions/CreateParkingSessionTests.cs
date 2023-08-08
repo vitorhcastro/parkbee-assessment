@@ -2,9 +2,11 @@ using Application.ParkingSessions.Commands.CreateParkingSession;
 using Domain.Entities;
 using FluentAssertions;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Presentation.Controllers;
-using static TestHelpers.ParkingSessionBuilder;
+using TestHelpers.Extensions;
+using static TestHelpers.Builders.ParkingSessionBuilder;
 
 namespace Presentation.Tests.Unit.Controllers.ParkingSessions;
 
@@ -51,6 +53,6 @@ public class CreateParkingSessionTests
         var actual = await parkingSessionsController.CreateParkingSession(TestRequest, CancellationToken.None);
 
         // Assert
-        actual.Should().BeEquivalentTo(expected);
+        actual.GetObjectResultContent().Should().BeEquivalentTo(expected);
     }
 }

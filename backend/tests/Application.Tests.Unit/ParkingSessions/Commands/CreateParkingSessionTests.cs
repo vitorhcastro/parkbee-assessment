@@ -6,10 +6,10 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.EntityFrameworkCore;
-using static TestHelpers.DoorBuilder;
-using static TestHelpers.GarageBuilder;
-using static TestHelpers.ParkingSessionBuilder;
-using static TestHelpers.UserBuilder;
+using static TestHelpers.Builders.DoorBuilder;
+using static TestHelpers.Builders.GarageBuilder;
+using static TestHelpers.Builders.ParkingSessionBuilder;
+using static TestHelpers.Builders.UserBuilder;
 
 namespace Application.Tests.Unit.ParkingSessions.Commands;
 

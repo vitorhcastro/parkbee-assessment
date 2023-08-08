@@ -4,7 +4,7 @@ using FluentAssertions;
 using MediatR;
 using Moq;
 using Presentation.Controllers;
-using static TestHelpers.ParkingSessionBuilder;
+using static TestHelpers.Builders.ParkingSessionBuilder;
 
 namespace Presentation.Tests.Unit.Controllers.ParkingSessions;
 

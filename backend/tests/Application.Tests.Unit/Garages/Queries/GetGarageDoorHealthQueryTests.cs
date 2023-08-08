@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.EntityFrameworkCore;
 
-using static TestHelpers.DoorBuilder;
-using static TestHelpers.GarageBuilder;
+using static TestHelpers.Builders.DoorBuilder;
+using static TestHelpers.Builders.GarageBuilder;
 
 namespace Application.Tests.Unit.Garages.Queries;
 

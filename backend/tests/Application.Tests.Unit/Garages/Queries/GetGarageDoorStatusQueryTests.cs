@@ -6,11 +6,12 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.EntityFrameworkCore;
+using TestHelpers.Builders;
 
 namespace Application.Tests.Unit.Garages.Queries;
 
-using static TestHelpers.DoorBuilder;
-using static TestHelpers.GarageBuilder;
+using static DoorBuilder;
+using static GarageBuilder;
 
 public class GetGarageDoorStatusQueryTests
 {

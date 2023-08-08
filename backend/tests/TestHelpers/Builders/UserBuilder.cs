@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Infrastructure;
 
-namespace TestHelpers;
+namespace TestHelpers.Builders;
 
 public class UserBuilder
 {

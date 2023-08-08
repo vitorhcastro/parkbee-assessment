@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace TestHelpers;
+namespace TestHelpers.Builders;
 
 public class GarageBuilder
 {

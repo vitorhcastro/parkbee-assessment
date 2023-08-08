@@ -6,11 +6,12 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.EntityFrameworkCore;
+using TestHelpers.Builders;
 
 namespace Application.Tests.Unit.Users.Queries;
 
-using static TestHelpers.UserBuilder;
-using static TestHelpers.ParkingSessionBuilder;
+using static UserBuilder;
+using static ParkingSessionBuilder;
 
 public class GetUserParkingSessionsByIdTests
 {

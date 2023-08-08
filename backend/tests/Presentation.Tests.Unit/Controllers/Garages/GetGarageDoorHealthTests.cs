@@ -4,8 +4,8 @@ using FluentAssertions;
 using MediatR;
 using Moq;
 using Presentation.Controllers;
-using static TestHelpers.DoorBuilder;
-using static TestHelpers.GarageBuilder;
+using static TestHelpers.Builders.DoorBuilder;
+using static TestHelpers.Builders.GarageBuilder;
 
 namespace Presentation.Tests.Unit.Controllers.Garages;
 

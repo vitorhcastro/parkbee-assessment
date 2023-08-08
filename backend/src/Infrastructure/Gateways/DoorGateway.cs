@@ -8,9 +8,16 @@ public class DoorGateway : IDoorGateway
 {
     public DoorHealth CheckHealth(Door door)
     {
-        var ping = new Ping();
-        var result = ping.Send(door.IpAddress, 1000);
-        return result.Status == IPStatus.Success ? DoorHealth.Ok : DoorHealth.Unreachable;
+        try
+        {
+            var ping = new Ping();
+            var result = ping.Send(door.IpAddress, 1000);
+            return result.Status == IPStatus.Success ? DoorHealth.Ok : DoorHealth.Unreachable;
+        }
+        catch (Exception)
+        {
+            return DoorHealth.Unreachable;
+        }
     }
 
     public Task<DoorStatus> CheckStatus(Door door)

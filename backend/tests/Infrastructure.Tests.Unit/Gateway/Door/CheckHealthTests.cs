@@ -1,7 +1,7 @@
 using Domain.Entities;
 using FluentAssertions;
 using Infrastructure.Gateways;
-using static TestHelpers.DoorBuilder;
+using static TestHelpers.Builders.DoorBuilder;
 
 namespace Infrastructure.Tests.Unit.Gateway.Door;
 

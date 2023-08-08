@@ -6,7 +6,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.EntityFrameworkCore;
-using static TestHelpers.ParkingSessionBuilder;
+using static TestHelpers.Builders.ParkingSessionBuilder;
 
 namespace Application.Tests.Unit.ParkingSessions.Queries;
 

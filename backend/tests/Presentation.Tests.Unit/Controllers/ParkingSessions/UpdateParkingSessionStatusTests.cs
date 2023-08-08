@@ -5,8 +5,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Presentation.Controllers;
-using static TestHelpers.DoorBuilder;
-using static TestHelpers.ParkingSessionBuilder;
+using static TestHelpers.Builders.DoorBuilder;
+using static TestHelpers.Builders.ParkingSessionBuilder;
 
 namespace Presentation.Tests.Unit.Controllers.ParkingSessions;
 

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Domain.Entities;
 using MediatR;
 
@@ -7,5 +8,6 @@ public record GetGarageDoorHealthQuery(Guid GarageId, Guid DoorId) : IRequest<Ge
 
 public class GetGarageDoorHealthResponse
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public DoorHealth Health { get; set; }
 }

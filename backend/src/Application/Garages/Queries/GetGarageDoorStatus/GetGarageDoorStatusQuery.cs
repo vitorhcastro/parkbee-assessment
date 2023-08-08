@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Domain.Entities;
 using MediatR;
 
@@ -7,5 +8,6 @@ public record GetGarageDoorStatusQuery(Guid GarageId, Guid DoorId) : IRequest<Ge
 
 public class GetGarageDoorStatusResponse
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public DoorStatus Status { get; set; }
 }

@@ -8,11 +8,12 @@ Start and stop sessions
           | user 2 |
           | user 3 |
         And the garages exist in the system
-          | garage   |
-          | garage 1 |
-          | garage 2 |
-          | garage 3 |
-          | garage 4 |
+          | garage   | totalSpots | doorHealth  |
+          | garage 1 | 10         | Ok          |
+          | garage 2 | 0          | Unreachable |
+          | garage 3 | 0          | Unreachable |
+          | garage 4 | 10         | Ok          |
+          | garage 5 | 10         | Ok          |
 
     Scenario: Starting a new parking session for a user
         Given "user 1" has no running parking session
@@ -35,7 +36,7 @@ Start and stop sessions
         And New parking session should not be created
 
     Scenario: Starting a new parking session for a user that already has a running parking session
-        Given "user 2" has a running parking session in any garage
+        Given "user 2" has a running parking session in "garage 5"
         When Start parking session API endpoint is called
         Then Endpoint should return an error code
         And New parking session should not be created

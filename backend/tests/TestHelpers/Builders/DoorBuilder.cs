@@ -1,8 +1,8 @@
 ﻿using Domain.Entities;
 using Infrastructure;
-using static TestHelpers.GarageBuilder;
+using static TestHelpers.Builders.GarageBuilder;
 
-namespace TestHelpers;
+namespace TestHelpers.Builders;
 
 public class DoorBuilder
 {

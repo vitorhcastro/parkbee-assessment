@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Domain.Entities;
 
 public class ParkingSession
@@ -7,6 +9,7 @@ public class ParkingSession
     public DateTime? EndDate { get; set; }
     public Guid UserId { get; set; }
     public User? User { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public ParkingSessionStatus Status { get; set; }
     public Guid EntryDoorId { get; set; }
     public Door? EntryDoor { get; set; }

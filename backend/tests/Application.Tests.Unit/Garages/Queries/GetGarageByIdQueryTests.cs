@@ -6,9 +6,9 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.EntityFrameworkCore;
-using static TestHelpers.DoorBuilder;
-using static TestHelpers.GarageBuilder;
-using static TestHelpers.ParkingSessionBuilder;
+using static TestHelpers.Builders.DoorBuilder;
+using static TestHelpers.Builders.GarageBuilder;
+using static TestHelpers.Builders.ParkingSessionBuilder;
 
 namespace Application.Tests.Unit.Garages.Queries;
 
@@ -54,20 +54,28 @@ public class GetGarageByIdQueryTests
     public async Task should_calculate_available_spots_based_on_existing_running_parking_sessions()
     {
         // Arrange
+        var garage = AGarage().Build();
+        dbContextMock
+            .Setup<DbSet<Garage>>(m => m.Garages)
+            .ReturnsDbSet(new List<Garage> { garage });
+        var door = ADoor().WithGarage(garage).Build();
+        dbContextMock
+            .Setup<DbSet<Door>>(m => m.Doors)
+            .ReturnsDbSet(new List<Door> { door });
         var parkingSessions = new List<ParkingSession>
         {
-            AParkingSession().WithEntryDoor(TestDoor).Build(),
-            AParkingSession().WithEntryDoor(TestDoor).WithStatus(ParkingSessionStatus.Stopped).Build(),
+            AParkingSession().WithEntryDoor(door).Build(),
+            AParkingSession().WithEntryDoor(door).WithStatus(ParkingSessionStatus.Stopped).Build(),
             AParkingSession().Build(),
             AParkingSession().WithStatus(ParkingSessionStatus.Stopped).Build(),
         };
         dbContextMock
             .Setup<DbSet<ParkingSession>>(m => m.ParkingSessions)
             .ReturnsDbSet(parkingSessions);
-        var expectedAvailableSpots = TestGarage.TotalSpots - 1;
+        var expectedAvailableSpots = garage.TotalSpots - 1;
 
         // Act
-        var act = await queryHandler.Handle(new GetGarageByIdQuery(TestGarage.Id), CancellationToken.None);
+        var act = await queryHandler.Handle(new GetGarageByIdQuery(garage.Id), CancellationToken.None);
 
         // Assert
         act.AvailableSpots.Should().Be(expectedAvailableSpots);

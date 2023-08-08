@@ -21,11 +21,13 @@ public class ParkingSessionsController : ControllerBase
     }
 
     [HttpPost]
-    public Task<CreateParkingSessionResponse> CreateParkingSession(CreateParkingSessionRequest request,
+    public async Task<ActionResult<CreateParkingSessionResponse>> CreateParkingSession(
+        CreateParkingSessionRequest request,
         CancellationToken cancellationToken)
     {
         var command = new CreateParkingSessionCommand(request);
-        return this.mediator.Send(command, cancellationToken);
+        var result = await this.mediator.Send(command, cancellationToken);
+        return CreatedAtAction(nameof(GetParkingSessionById), new { id = result.Id }, result);
     }
 
     [HttpGet("{id:guid}")]
@@ -36,7 +38,8 @@ public class ParkingSessionsController : ControllerBase
     }
 
     [HttpPut("{id:guid}/status")]
-    public async Task<IActionResult> UpdateParkingSessionStatus(Guid id, UpdateParkingSessionStatusRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateParkingSessionStatus(Guid id, UpdateParkingSessionStatusRequest request,
+        CancellationToken cancellationToken)
     {
         var command = new UpdateParkingSessionStatusCommand(id, request);
         await this.mediator.Send(command, cancellationToken);

@@ -1,8 +1,8 @@
 using Domain.Entities;
-using static TestHelpers.DoorBuilder;
-using static TestHelpers.UserBuilder;
+using static TestHelpers.Builders.DoorBuilder;
+using static TestHelpers.Builders.UserBuilder;
 
-namespace TestHelpers;
+namespace TestHelpers.Builders;
 
 public class ParkingSessionBuilder
 {
