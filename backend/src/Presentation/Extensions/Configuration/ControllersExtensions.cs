@@ -1,4 +1,5 @@
-﻿using FluentValidation.AspNetCore;
+﻿using System.Text.Json.Serialization;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Filters;
 
@@ -10,6 +11,7 @@ public static class ControllersExtensions
     {
         services
             .AddControllers(options => { options.Filters.Add<ApiExceptionFilterAttribute>(); })
+            .AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); })
             .AddFluentValidation(configuration => { configuration.AutomaticValidationEnabled = false; });
 
         services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });

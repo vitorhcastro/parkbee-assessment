@@ -7,6 +7,7 @@ using Application.Garages.Queries.GetGarageDoorHealth;
 using Application.Garages.Queries.GetGarageDoorStatus;
 using Domain.Entities;
 using FluentAssertions;
+using Infrastructure;
 using TechTalk.SpecFlow.Assist;
 using Xunit;
 
@@ -47,18 +48,21 @@ public class GarageSteps : IClassFixture<IntegrationTestFixture>
                         Id = Guid.NewGuid(),
                         Description = "Entry",
                         DoorType = DoorType.Entry,
+                        IpAddress = ApplicationConstants.ParkbeeDotComIpAddress,
                     },
                     new()
                     {
                         Id = Guid.NewGuid(),
                         Description = "Exit",
                         DoorType = DoorType.Exit,
+                        IpAddress = ApplicationConstants.ParkbeeDotComIpAddress,
                     },
                     new()
                     {
                         Id = Guid.NewGuid(),
                         Description = "Pedestrian",
                         DoorType = DoorType.Pedestrian,
+                        IpAddress = ApplicationConstants.ParkbeeDotComIpAddress,
                     },
                 }
             };

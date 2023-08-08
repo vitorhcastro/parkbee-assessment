@@ -38,30 +38,35 @@ public static class DependencyInjection
     {
         var scope = app.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetService<ParkingDbContext>();
+        var random = new Random();
 
         dbContext.Garages.AddRange(Enumerable.Range(0, 10).Select(x => new Garage
         {
             Id = Guid.NewGuid(),
             Name = $"Garage {Guid.NewGuid()}",
+            TotalSpots = random.Next(1, 100),
             Doors = new List<Door>()
             {
                 new()
                 {
                     Id = Guid.NewGuid(),
                     Description = $"Door {Guid.NewGuid()}",
-                    DoorType = DoorType.Entry
+                    DoorType = DoorType.Entry,
+                    IpAddress = ApplicationConstants.ParkbeeDotComIpAddress,
                 },
                 new()
                 {
                     Id = Guid.NewGuid(),
                     Description = $"Door {Guid.NewGuid()}",
-                    DoorType = DoorType.Exit
+                    DoorType = DoorType.Exit,
+                    IpAddress = ApplicationConstants.ParkbeeDotComIpAddress,
                 },
                 new()
                 {
                     Id = Guid.NewGuid(),
                     Description = $"Door {Guid.NewGuid()}",
-                    DoorType = DoorType.Pedestrian
+                    DoorType = DoorType.Pedestrian,
+                    IpAddress = ApplicationConstants.ParkbeeDotComIpAddress,
                 }
             }
         }));

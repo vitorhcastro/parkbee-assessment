@@ -46,7 +46,6 @@ public class DoorBuilder
         {
             Id = this.id,
             GarageId = this.garage.Id,
-            Garage = this.garage,
             DoorType = this.doorType,
             IpAddress = this.ipAddress,
         };

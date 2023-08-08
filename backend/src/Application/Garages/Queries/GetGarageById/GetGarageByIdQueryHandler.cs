@@ -28,8 +28,8 @@ public class GetGarageByIdQueryHandler : IRequestHandler<GetGarageByIdQuery, Get
         }
 
         var runningParkingSessions = await this.dbContext.ParkingSessions
-            .Where(ps => garage.Doors.Any(d => d.Id == ps.EntryDoorId))
-            .CountAsync(ps => ps.Status == ParkingSessionStatus.Running, cancellationToken: cancellationToken);
+            .Where(ps => ps.EntryDoor.GarageId == garage.Id)
+            .CountAsync(ps => ps.Status == ParkingSessionStatus.Running, cancellationToken);
 
         return new GetGarageByIdResponse(garage.Id, garage.Name, garage.TotalSpots, garage.Doors, garage.TotalSpots - runningParkingSessions);
     }

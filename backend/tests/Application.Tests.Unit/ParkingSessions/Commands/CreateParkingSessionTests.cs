@@ -9,15 +9,18 @@ using Moq.EntityFrameworkCore;
 using static TestHelpers.DoorBuilder;
 using static TestHelpers.GarageBuilder;
 using static TestHelpers.ParkingSessionBuilder;
+using static TestHelpers.UserBuilder;
 
 namespace Application.Tests.Unit.ParkingSessions.Commands;
 
 public class CreateParkingSessionTests
 {
-    private static readonly ParkingSession TestParkingSession = AParkingSession().Build();
+    private static readonly Garage TestGarage = AGarage().Build();
+    private static readonly Door TestDoor = ADoor().WithGarage(TestGarage).Build();
+    private static readonly User TestUser = AUser().Build();
 
     private static readonly CreateParkingSessionRequest TestRequest =
-        new(TestParkingSession.UserId, TestParkingSession.EntryDoor.GarageId, TestParkingSession.EntryDoorId);
+        new(TestUser.Id, TestGarage.Id, TestDoor.Id);
 
     private readonly Mock<IParkingDbContext> dbContextMock;
     private readonly Mock<IDoorGateway> gatewayMock;
@@ -28,13 +31,13 @@ public class CreateParkingSessionTests
         dbContextMock = new Mock<IParkingDbContext>();
         dbContextMock
             .Setup<DbSet<User>>(m => m.Users)
-            .ReturnsDbSet(new List<User> { TestParkingSession.User });
+            .ReturnsDbSet(new List<User> { TestUser });
         dbContextMock
             .Setup<DbSet<Garage>>(m => m.Garages)
-            .ReturnsDbSet(new List<Garage> { TestParkingSession.EntryDoor.Garage });
+            .ReturnsDbSet(new List<Garage> { TestGarage });
         dbContextMock
             .Setup<DbSet<Door>>(m => m.Doors)
-            .ReturnsDbSet(new List<Door> { TestParkingSession.EntryDoor });
+            .ReturnsDbSet(new List<Door> { TestDoor });
         dbContextMock
             .Setup<DbSet<ParkingSession>>(m => m.ParkingSessions)
             .ReturnsDbSet(new List<ParkingSession>());
@@ -44,7 +47,7 @@ public class CreateParkingSessionTests
 
         gatewayMock = new Mock<IDoorGateway>();
         gatewayMock
-            .Setup(x => x.CheckHealth(TestParkingSession.EntryDoor))
+            .Setup(x => x.CheckHealth(TestDoor))
             .Returns(DoorHealth.Ok);
 
         commandHandler = new CreateParkingSessionCommandHandler(dbContextMock.Object, gatewayMock.Object);
@@ -142,7 +145,7 @@ public class CreateParkingSessionTests
     {
         // Arrange
         this.gatewayMock
-            .Setup(x => x.OpenDoor(TestParkingSession.EntryDoor))
+            .Setup(x => x.OpenDoor(TestDoor))
             .Returns(Task.CompletedTask);
 
         // Act
@@ -150,7 +153,7 @@ public class CreateParkingSessionTests
             CancellationToken.None);
 
         // Assert
-        this.gatewayMock.Verify(m => m.OpenDoor(TestParkingSession.EntryDoor), Times.Once);
+        this.gatewayMock.Verify(m => m.OpenDoor(TestDoor), Times.Once);
     }
 
     [Fact]
@@ -159,7 +162,7 @@ public class CreateParkingSessionTests
         // Arrange
         dbContextMock
             .Setup<DbSet<ParkingSession>>(m => m.ParkingSessions)
-            .ReturnsDbSet(new List<ParkingSession> { AParkingSession().WithUser(TestParkingSession.User).Build() });
+            .ReturnsDbSet(new List<ParkingSession> { AParkingSession().WithUser(TestUser).Build() });
 
         // Act
         Func<Task> act = async () =>
@@ -212,7 +215,7 @@ public class CreateParkingSessionTests
     {
         // Arrange
         this.gatewayMock
-            .Setup(m => m.CheckHealth(TestParkingSession.EntryDoor))
+            .Setup(m => m.CheckHealth(TestDoor))
             .Returns(doorHealth);
 
         // Act

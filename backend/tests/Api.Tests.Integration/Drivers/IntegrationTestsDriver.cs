@@ -1,5 +1,6 @@
 using Api.Tests.Integration.Fixtures;
 using Application.Common.Interfaces;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Api.Tests.Integration.Drivers;
@@ -14,7 +15,10 @@ public class IntegrationTestsDriver
     public IntegrationTestsDriver(IntegrationTestFixture factory)
     {
         this.factory = factory;
-        httpClient = this.factory.CreateDefaultClient();
+        httpClient = this.factory.CreateClient(new WebApplicationFactoryClientOptions()
+        {
+            BaseAddress = new Uri("https://localhost"),
+        });
     }
 
 

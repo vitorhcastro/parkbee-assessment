@@ -54,7 +54,7 @@ public class
         }
 
         var runningParkingSessions = await this.dbContext.ParkingSessions
-            .Where(ps => garage.Doors.Any(d => d.Id == ps.EntryDoorId))
+            .Where(ps => ps.EntryDoor.GarageId == garage.Id)
             .CountAsync(ps => ps.Status == ParkingSessionStatus.Running, cancellationToken: cancellationToken);
         if (runningParkingSessions >= garage.TotalSpots)
         {

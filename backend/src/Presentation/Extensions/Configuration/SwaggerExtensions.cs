@@ -1,5 +1,6 @@
 using Infrastructure.Authorization;
 using Microsoft.OpenApi.Models;
+using Presentation.Filters;
 
 namespace Presentation.Extensions.Configuration;
 
@@ -10,6 +11,8 @@ public static class SwaggerExtensions
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(setup =>
         {
+            setup.SchemaFilter<EnumSchemaFilter>();
+
             setup.AddSecurityDefinition(ApiKeyAuthenticationOptions.DefaultScheme, new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,

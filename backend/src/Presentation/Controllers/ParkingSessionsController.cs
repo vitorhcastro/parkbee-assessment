@@ -28,7 +28,7 @@ public class ParkingSessionsController : ControllerBase
         return this.mediator.Send(command, cancellationToken);
     }
 
-    [HttpGet("id:guid")]
+    [HttpGet("{id:guid}")]
     public Task<ParkingSession> GetParkingSessionById(Guid id, CancellationToken cancellationToken)
     {
         var query = new GetParkingSessionByIdQuery(id);
